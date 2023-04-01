@@ -1,13 +1,17 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import Login from "./pages/login/Login";
-import Register from "./pages/register/Register";
-import "./App.scss";
-import Header from "./components/header/Header";
-
-import Home from "./pages/home/Home";
-import PageNotFound from "./pages/404/PageNotFound";
 import { useContext } from "react";
 import { AuthContext } from "./context/authContext";
+
+import "./App.scss";
+
+import Login from "./pages/login/Login";
+import Register from "./pages/register/Register";
+import Header from "./components/header/Header";
+import Home from "./pages/home/Home";
+import PageNotFound from "./pages/404/PageNotFound";
+import LeftBar from "./components/leftBar/LeftBar";
+import RightBar from "./components/rightBar/RightBar";
+import ContentWrapper from "./components/contentWrapper/ContentWrapper";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -16,7 +20,13 @@ function App() {
     return (
       <div className="layout">
         <Header />
-        <div className="children">{children}</div>
+        <div className="content">
+          <ContentWrapper>
+            <LeftBar />
+            <div className="children">{children}</div>
+            <RightBar />
+          </ContentWrapper>
+        </div>
       </div>
     );
   };

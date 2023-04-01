@@ -3,8 +3,25 @@
   flex-direction: column;
   height: 100vh;
 
-  .children {
+  .content {
     flex: 1;
     background-color: var(--font-color-light);
+
+    .content-wrapper {
+      display: flex;
+      padding-top: 20px;
+
+      .left-bar {
+        flex: 1;
+      }
+
+      .children {
+        flex: 3;
+      }
+
+      .right-bar {
+        flex: 1;
+      }
+    }
   }
 }

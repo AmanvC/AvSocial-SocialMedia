@@ -29,7 +29,6 @@ const Header = () => {
             placeholder="Search user..."
             onChange={(e) => setSearchInput(e.target.value)}
             value={searchInput}
-            autoFocus
           />
           {showSearch && <span onClick={() => setShowSearch(false)}>✖</span>}
         </div>
