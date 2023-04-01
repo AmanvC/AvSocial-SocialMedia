@@ -4,12 +4,15 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "./context/authContext";
+import { ToastProvider } from "react-toast-notifications";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-    <AuthContextProvider>
-      <App />
-    </AuthContextProvider>
+    <ToastProvider>
+      <AuthContextProvider>
+        <App />
+      </AuthContextProvider>
+    </ToastProvider>
   </BrowserRouter>
 );

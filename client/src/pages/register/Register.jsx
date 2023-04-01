@@ -1,5 +1,8 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useToasts } from "react-toast-notifications";
+import { makeRequest } from "../../axios";
+import { AuthContext } from "../../context/authContext";
 import "./register.scss";
 
 const Register = () => {
@@ -14,8 +17,27 @@ const Register = () => {
   const [valid, setValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const submitForm = (e) => {
+  const { addToast } = useToasts();
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const submitForm = async (e) => {
     e.preventDefault();
+    try {
+      const res = await makeRequest.post("/users/create-user", {
+        ...inputs,
+      });
+      addToast(res.data.message, {
+        appearance: "success",
+        autoDismiss: true,
+      });
+    } catch (err) {
+      navigate("/login");
+      addToast(err.response.data.message, {
+        appearance: "error",
+        autoDismiss: true,
+      });
+    }
   };
 
   const changeInputs = (e) => {
@@ -37,6 +59,12 @@ const Register = () => {
     if (valid) {
       setValid(false);
     }
+  }
+
+  console.log("REGISTER");
+
+  if (currentUser) {
+    return <Navigate to="/" />;
   }
 
   return (

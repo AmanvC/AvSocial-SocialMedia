@@ -1,0 +1,110 @@
+@import "../../mixins.scss";
+
+.header {
+  height: 80px;
+  background-color: var(--theme-color);
+  color: var(--font-color-light);
+  position: relative;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  @include md {
+    font-size: 14px;
+  }
+
+  @include sm {
+    font-size: 12px;
+    height: 60px;
+  }
+
+  .content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .brand-container {
+      h1 {
+        font-size: 3em;
+        user-select: none;
+
+        @include sm {
+          font-size: 2em;
+        }
+      }
+    }
+
+    .search-container {
+      width: 40%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      input {
+        width: 100%;
+        font-size: 1.2em;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+
+        @include md {
+          width: 80%;
+        }
+
+        @include sm {
+          display: none;
+        }
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      input.show-search {
+        position: absolute;
+        top: 110%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        width: 90%;
+        display: block;
+        padding: 10px;
+      }
+
+      span {
+        position: absolute;
+        top: 125%;
+        right: 35px;
+        font-weight: 600;
+        color: var(--font-color-dark);
+        user-select: none;
+      }
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .search-small-screen {
+        display: none;
+        cursor: pointer;
+        user-select: none;
+
+        @include sm {
+          display: block;
+        }
+      }
+
+      .user-name {
+        font-size: 1.5em;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .logout {
+        background-color: var(--font-color-light);
+      }
+    }
+  }
+}
