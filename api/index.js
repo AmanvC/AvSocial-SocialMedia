@@ -1,6 +1,7 @@
 const express = require("express");
 const port = 5000;
 const passportJwt = require("./config/passport-jwt-strategy");
+const db = require("./config/mongoose");
 const cors = require("cors");
 
 const app = express();
