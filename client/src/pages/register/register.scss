@@ -1,0 +1,170 @@
+@import "../../mixins.scss";
+
+.register {
+  box-sizing: border-box;
+  margin: 0;
+  background-image: url("../../utils/media/IMG_20171223_180050-01.jpeg");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @include sm {
+    height: fit-content;
+    min-height: 100vh;
+  }
+
+  .container {
+    height: 500px;
+    width: 600px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 4px;
+    padding: 20px;
+
+    @include md {
+      width: 90%;
+      height: fit-content;
+      overflow: scroll;
+      margin: 20px 10px;
+      opacity: 0.9;
+    }
+
+    @include sm {
+      width: 80vw;
+      height: fit-content;
+      overflow: scroll;
+      margin: 20px 10px;
+      opacity: 0.9;
+    }
+
+    #header {
+      margin-bottom: 50px;
+
+      h1 {
+        font-size: 50px;
+        margin-bottom: 10px;
+
+        @include sm {
+          font-size: 40px;
+        }
+      }
+
+      p {
+        font-size: 14px;
+        margin: 0;
+        color: rgb(161, 161, 161);
+
+        @include sm {
+          font-size: smaller;
+        }
+
+        a {
+          text-decoration: none;
+          color: rgba(0, 0, 255, 0.479);
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    #signup-form {
+      #input-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px 20px;
+        justify-content: space-between;
+
+        > p {
+          margin: 12px 0;
+          padding-bottom: 10px;
+          border-bottom: 1px solid lightgray;
+        }
+
+        .input {
+          width: calc(calc(100% - 25px) / 2);
+          position: relative;
+
+          @include sm {
+            width: 100%;
+          }
+
+          .show-password {
+            position: "absolute";
+            top: 110%;
+            left: 5%;
+            font-size: 14px;
+            color: gray;
+            cursor: pointer;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+
+          p {
+            margin: 3px 0;
+            font-size: 13px;
+            font-weight: 600;
+          }
+
+          input {
+            box-sizing: border-box;
+            padding: 10px;
+            border: 1px solid lightgray;
+            width: 100%;
+            border-radius: 5px;
+            outline: none;
+            font-size: 16px;
+
+            &::placeholder {
+              opacity: 0.4;
+            }
+
+            &:hover {
+              border: 1px solid rgba(0, 0, 255, 0.479);
+            }
+          }
+        }
+      }
+
+      #button-container {
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 20px;
+        margin-top: 25px;
+
+        button:not(:disabled) {
+          border: none;
+          color: #fff;
+          padding: 10px 20px;
+          background-color: rgb(158, 64, 64);
+          border-radius: 5px;
+          letter-spacing: 1px;
+          width: 100px;
+          cursor: pointer;
+
+          &:active {
+            transform: scale(0.95);
+          }
+        }
+
+        button:disabled {
+          border: none;
+          color: #fff;
+          padding: 10px 20px;
+          background-color: rgb(158, 64, 64);
+          width: 100px;
+          border-radius: 5px;
+          letter-spacing: 1px;
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}
