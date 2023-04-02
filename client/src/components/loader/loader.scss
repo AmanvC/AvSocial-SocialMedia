@@ -1,0 +1,29 @@
+.loader {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+
+  .circle {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    border: 15px solid lightgray;
+    border-top: 15px solid gray;
+    animation: animate 5s linear infinite;
+
+    @keyframes animate {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  }
+}

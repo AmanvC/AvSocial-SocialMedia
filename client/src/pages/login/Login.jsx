@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useToasts } from "react-toast-notifications";
 import { AuthContext } from "../../context/authContext";
 import "./login.scss";
 
@@ -12,6 +13,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const { currentUser, login } = useContext(AuthContext);
 
+  const { addToast } = useToasts();
+
   const navigate = useNavigate();
 
   const submitForm = async (e) => {
@@ -21,6 +24,10 @@ const Login = () => {
       await login(inputs.email, inputs.password);
       navigate("/");
       setLoading(false);
+      addToast("Logged in successfully.", {
+        appearance: "success",
+        autoDismiss: true,
+      });
     } catch (err) {
       setError(err.response.data.message);
       setLoading(false);

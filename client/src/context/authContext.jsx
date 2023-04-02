@@ -22,7 +22,7 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const { data } = await makeRequest.post("/users/create-session", {
+    const { data } = await makeRequest().post("/users/create-session", {
       email,
       password,
     });
