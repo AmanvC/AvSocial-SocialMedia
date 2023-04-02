@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const postsController = require("../../../controllers/postsController");
 
-router.get("/", (req, res) => {
-  return res.send("<h1>Working</h1>");
-});
+router.get("/", postsController.getPosts);
+router.post("/create", postsController.createPost);
 router.use("/comments", require("./comments"));
 
 module.exports = router;
