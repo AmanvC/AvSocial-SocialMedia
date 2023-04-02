@@ -8,5 +8,10 @@ router.use(
   passport.authenticate("jwt", { session: false }),
   require("./posts")
 );
+router.use(
+  "/stories",
+  passport.authenticate("jwt", { session: false }),
+  require("./stories")
+);
 
 module.exports = router;

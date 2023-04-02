@@ -6,21 +6,22 @@ const User = require("../models/User");
 
 let options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: "secret",
+  secretOrKey: "secretkey",
 };
 
 passport.use(
-  new JWTStrategy(options, (jwtPayload, done) => {
-    User.findById(jwtPayload._id, (err, user) => {
-      if (err) {
-        return done(err);
-      }
+  new JWTStrategy(options, async (jwtPayload, done) => {
+    try {
+      const user = await User.findOne({ username: jwtPayload.username });
+
       if (user) {
         return done(null, user);
       } else {
         return done(null, false);
       }
-    });
+    } catch (err) {
+      return done(err);
+    }
   })
 );
 
