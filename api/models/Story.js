@@ -16,8 +16,8 @@ const storySchema = new mongoose.Schema(
   }
 );
 
-storySchema.index({ createdAt: 1 }, { expireAfterSeconds: 10 });
+storySchema.index({ createdAt: 1 }, { expireAfterSeconds: 3600 * 24 });
 
 const Story = mongoose.model("Story", storySchema);
 
-modeule.exports = Story;
+module.exports = Story;
