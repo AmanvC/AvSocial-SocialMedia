@@ -36,6 +36,7 @@ const Share = ({ fetchPosts }) => {
       image: imgUrl,
     });
     fetchPosts();
+    setPostInput("");
     setFile(null);
   };
 
