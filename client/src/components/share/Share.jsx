@@ -72,7 +72,9 @@ const Share = ({ fetchPosts }) => {
         <label htmlFor="file" className="add-image">
           Upload Image
         </label>
-        <button onClick={handleAddPost}>Add Post</button>
+        <button onClick={handleAddPost} disabled={!(postInput || file)}>
+          Add Post
+        </button>
       </div>
     </div>
   );
