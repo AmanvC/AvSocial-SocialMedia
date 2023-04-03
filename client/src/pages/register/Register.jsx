@@ -24,15 +24,15 @@ const Register = () => {
   const submitForm = async (e) => {
     e.preventDefault();
     try {
-      const res = await makeRequest.post("/users/create-user", {
+      const res = await makeRequest().post("/users/create-user", {
         ...inputs,
       });
+      navigate("/login");
       addToast(res.data.message, {
         appearance: "success",
         autoDismiss: true,
       });
     } catch (err) {
-      navigate("/login");
       addToast(err.response.data.message, {
         appearance: "error",
         autoDismiss: true,
@@ -60,8 +60,6 @@ const Register = () => {
       setValid(false);
     }
   }
-
-  console.log("REGISTER");
 
   if (currentUser) {
     return <Navigate to="/" />;
