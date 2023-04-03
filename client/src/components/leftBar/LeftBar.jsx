@@ -1,7 +1,7 @@
 import "./leftBar.scss";
 
 const LeftBar = () => {
-  return <div className="left-bar">LeftBar</div>;
+  return <div className="leftbar">LeftBar</div>;
 };
 
 export default LeftBar;

@@ -1,0 +1,14 @@
+@import "../../mixins.scss";
+
+.rightbar {
+  height: 100%;
+  background-color: #fff;
+  box-shadow: 1px 1px 10px gray;
+  padding: 20px;
+  border-radius: 10px;
+  margin-left: 20px;
+
+  @include sm {
+    display: none;
+  }
+}
