@@ -27,17 +27,28 @@ const Share = ({ fetchPosts }) => {
 
   const handleAddPost = async (e) => {
     e.preventDefault();
-    let imgUrl = "";
-    if (file) {
-      imgUrl = await upload();
+    try {
+      let imgUrl = "";
+      if (file) {
+        imgUrl = await upload();
+      }
+      await makeRequest().post("/posts/create", {
+        content: postInput,
+        image: imgUrl,
+      });
+      setPostInput("");
+      setFile(null);
+      fetchPosts();
+      addToast("Post created successfully.", {
+        appearance: "success",
+        autoDismiss: true,
+      });
+    } catch (err) {
+      addToast("Something went wrong while creating a new Post!", {
+        appearance: "error",
+        autoDismiss: true,
+      });
     }
-    await makeRequest().post("/posts/create", {
-      content: postInput,
-      image: imgUrl,
-    });
-    fetchPosts();
-    setPostInput("");
-    setFile(null);
   };
 
   console.log(postInput);
