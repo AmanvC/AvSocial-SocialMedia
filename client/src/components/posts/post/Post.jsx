@@ -24,7 +24,6 @@ const Post = ({ post }) => {
         {post.image && (
           <div className="post-image">
             <img src={"/uploads/" + post.image} alt={post.image} />
-            {/* <img src={Image} alt="" /> */}
           </div>
         )}
       </div>

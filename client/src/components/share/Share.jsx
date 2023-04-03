@@ -55,13 +55,18 @@ const Share = ({ fetchPosts }) => {
 
   return (
     <div className="share">
-      <textarea
-        name="content"
-        rows="3"
-        placeholder={"What's on your mind, " + currentUser.firstName + "?"}
-        value={postInput}
-        onChange={(e) => setPostInput(e.target.value)}
-      />
+      <div className="post-inputs">
+        <textarea
+          name="content"
+          rows="3"
+          placeholder={"What's on your mind, " + currentUser.firstName + "?"}
+          value={postInput}
+          onChange={(e) => setPostInput(e.target.value)}
+        />
+        {file && (
+          <img className="file" alt="" src={URL.createObjectURL(file)} />
+        )}
+      </div>
       <div className="action-buttons">
         <input
           type="file"
