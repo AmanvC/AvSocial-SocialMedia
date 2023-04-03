@@ -3,16 +3,27 @@ import ContentWrapper from "../contentWrapper/ContentWrapper";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import { Link } from "react-router-dom";
+import { useToasts } from "react-toast-notifications";
 
 const Header = () => {
   const { currentUser, logout } = useContext(AuthContext);
   const [searchInput, setSearchInput] = useState("");
   const [showSearch, setShowSearch] = useState(false);
 
+  const { addToast } = useToasts();
+
   useEffect(() => {
     // todo
     console.log("Input changed!");
   }, [searchInput]);
+
+  const handleLogoutClick = () => {
+    logout();
+    addToast("Logged out successfully.", {
+      appearance: "success",
+      autoDismiss: true,
+    });
+  };
 
   return (
     <div className="header">
@@ -40,7 +51,7 @@ const Header = () => {
             🔍
           </p>
           <p className="user-name">{currentUser.firstName}</p>
-          <button className="logout" onClick={() => logout()}>
+          <button className="logout" onClick={handleLogoutClick}>
             Logout
           </button>
         </div>

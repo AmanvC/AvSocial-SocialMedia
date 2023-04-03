@@ -1,0 +1,43 @@
+.share {
+  width: 100%;
+  outline: 1px solid var(--theme-color);
+  box-shadow: 1px 1px 10px gray;
+  padding: 10px;
+  border-radius: 10px;
+
+  textarea {
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    height: 80px;
+    width: 100%;
+    resize: none;
+    padding: 20px;
+    font-size: 1rem;
+
+    &::placeholder {
+      opacity: 0.5;
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    gap: 20px;
+
+    .add-image {
+      color: var(--theme-color);
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+
+    button {
+      background-color: var(--theme-color);
+      color: #fff;
+      font-size: 0.8rem;
+    }
+  }
+}

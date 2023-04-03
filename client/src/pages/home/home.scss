@@ -1,3 +1,8 @@
 .home {
   height: 100%;
+  display: flex;
+  overflow: scroll;
+  flex-direction: column;
+  gap: 40px;
+  padding: 0 20px 20px 20px;
 }
