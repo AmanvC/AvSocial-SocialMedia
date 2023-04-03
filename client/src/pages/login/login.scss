@@ -227,7 +227,7 @@
           button:not(:disabled) {
             border: none;
             color: #fff;
-            padding: 10px 20px;
+            padding: 10px;
             background-color: rgb(158, 64, 64);
             border-radius: 5px;
             letter-spacing: 1px;
@@ -242,13 +242,14 @@
           button:disabled {
             border: none;
             color: #fff;
-            padding: 10px 20px;
+            padding: 10px;
             background-color: rgb(158, 64, 64);
             width: 100px;
             border-radius: 5px;
             letter-spacing: 1px;
             cursor: not-allowed;
             opacity: 0.5;
+            transform: scale(1);
           }
         }
       }

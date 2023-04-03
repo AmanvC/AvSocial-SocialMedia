@@ -111,7 +111,10 @@ const Login = () => {
               </div>
               <div id="actions">
                 <Link to="">Forgot password?</Link>
-                <button id="submit" disabled={loading}>
+                <button
+                  id="submit"
+                  disabled={loading || !inputs.email || !inputs.password}
+                >
                   <span>{!loading ? "Login" : "Loading..."}</span>
                 </button>
               </div>
