@@ -54,4 +54,22 @@
       word-break: break-all;
     }
   }
+
+  .actions-container {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 5px;
+
+    .like-icon {
+      font-size: 1.5em;
+      cursor: pointer;
+    }
+
+    .count {
+      padding-bottom: 6px;
+      font-size: 0.9em;
+    }
+  }
 }

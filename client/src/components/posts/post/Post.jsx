@@ -2,8 +2,47 @@ import "./post.scss";
 import Image from "../../../assets/test.jpeg";
 
 import moment from "moment";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../../context/authContext";
+import { makeRequest } from "../../../axios";
+import { useToasts } from "react-toast-notifications";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 
 const Post = ({ post }) => {
+  const [likes, setLikes] = useState([]);
+
+  const { addToast } = useToasts();
+  const { currentUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    getAllLikes();
+  }, []);
+
+  const getAllLikes = async () => {
+    try {
+      const res = await makeRequest().get(`/likes?postId=${post._id}`);
+      setLikes(res.data.data);
+    } catch (err) {
+      addToast("Something went wrong!", {
+        appearance: "error",
+        autoDismiss: true,
+      });
+    }
+  };
+
+  const handleLikeToggle = async () => {
+    const liked = likes.indexOf(currentUser._id) !== -1;
+    if (liked) {
+      const index = likes.indexOf(currentUser._id);
+      setLikes((prev) => prev.slice(index + 1));
+      await makeRequest().delete(`/likes?postId=${post._id}`);
+    } else {
+      setLikes((prev) => [...prev, currentUser._id]);
+      await makeRequest().post("/likes", { postId: post._id });
+    }
+    getAllLikes();
+  };
+
   return (
     <div className="post">
       <div className="post-details">
@@ -26,6 +65,16 @@ const Post = ({ post }) => {
             <img src={"/uploads/" + post.image} alt={post.image} />
           </div>
         )}
+      </div>
+      <div className="actions-container">
+        <div className="like-icon" onClick={handleLikeToggle}>
+          {likes.indexOf(currentUser._id) !== -1 ? (
+            <AiFillHeart style={{ color: "red" }} />
+          ) : (
+            <AiOutlineHeart />
+          )}
+        </div>
+        <div className="count">{likes.length} Likes</div>
       </div>
     </div>
   );
