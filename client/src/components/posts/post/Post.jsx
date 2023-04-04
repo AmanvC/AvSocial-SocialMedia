@@ -5,13 +5,13 @@ import moment from "moment";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/authContext";
 import { makeRequest } from "../../../axios";
-import { useToasts } from "react-toast-notifications";
+import toast from "react-hot-toast";
+
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 
 const Post = ({ post }) => {
   const [likes, setLikes] = useState([]);
 
-  const { addToast } = useToasts();
   const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
@@ -23,10 +23,7 @@ const Post = ({ post }) => {
       const res = await makeRequest().get(`/likes?postId=${post._id}`);
       setLikes(res.data.data);
     } catch (err) {
-      addToast("Something went wrong!", {
-        appearance: "error",
-        autoDismiss: true,
-      });
+      toast.error("Something went wrong!");
     }
   };
 

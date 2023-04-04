@@ -3,14 +3,12 @@ import ContentWrapper from "../contentWrapper/ContentWrapper";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import { Link } from "react-router-dom";
-import { useToasts } from "react-toast-notifications";
+import toast from "react-hot-toast";
 
 const Header = () => {
   const { currentUser, logout } = useContext(AuthContext);
   const [searchInput, setSearchInput] = useState("");
   const [showSearch, setShowSearch] = useState(false);
-
-  const { addToast } = useToasts();
 
   useEffect(() => {
     // todo
@@ -19,10 +17,7 @@ const Header = () => {
 
   const handleLogoutClick = () => {
     logout();
-    addToast("Logged out successfully.", {
-      appearance: "success",
-      autoDismiss: true,
-    });
+    toast.success("Logged out successfully.");
   };
 
   return (

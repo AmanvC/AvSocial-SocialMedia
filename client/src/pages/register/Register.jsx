@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useToasts } from "react-toast-notifications";
 import { makeRequest } from "../../axios";
 import { AuthContext } from "../../context/authContext";
+import toast from "react-hot-toast";
 import "./register.scss";
 
 const Register = () => {
@@ -17,7 +17,6 @@ const Register = () => {
   const [valid, setValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { addToast } = useToasts();
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -28,15 +27,9 @@ const Register = () => {
         ...inputs,
       });
       navigate("/login");
-      addToast(res.data.message, {
-        appearance: "success",
-        autoDismiss: true,
-      });
+      toast.success(res.data.message);
     } catch (err) {
-      addToast(err.response.data.message, {
-        appearance: "error",
-        autoDismiss: true,
-      });
+      toast.error(err.response.data.message);
     }
   };
 

@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "./context/authContext";
+import { Toaster } from "react-hot-toast";
 
 import "./App.scss";
 
@@ -40,6 +41,7 @@ function App() {
 
   return (
     <div className="App">
+      <Toaster />
       <Routes>
         <Route
           path="/"

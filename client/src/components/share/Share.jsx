@@ -1,13 +1,12 @@
 import { useContext, useState } from "react";
-import { useToasts } from "react-toast-notifications";
 import { makeRequest } from "../../axios";
 import { AuthContext } from "../../context/authContext";
 import "./share.scss";
+import toast from "react-hot-toast";
 
 const Share = ({ fetchPosts }) => {
   const [file, setFile] = useState(null);
   const [postInput, setPostInput] = useState("");
-  const { addToast } = useToasts();
 
   const { currentUser } = useContext(AuthContext);
 
@@ -18,10 +17,7 @@ const Share = ({ fetchPosts }) => {
       const res = await makeRequest().post("/upload", formData);
       return res.data;
     } catch (err) {
-      addToast("Could not upload image, something went wrong!", {
-        appearance: "error",
-        autoDismiss: true,
-      });
+      toast.error("Could not upload image, something went wrong!");
     }
   };
 
@@ -39,19 +35,11 @@ const Share = ({ fetchPosts }) => {
       setPostInput("");
       setFile(null);
       fetchPosts();
-      addToast("Post created successfully.", {
-        appearance: "success",
-        autoDismiss: true,
-      });
+      toast.success("Post Created Successfully.");
     } catch (err) {
-      addToast("Something went wrong while creating a new Post!", {
-        appearance: "error",
-        autoDismiss: true,
-      });
+      toast.error("Something went wrong while creating a new Post!");
     }
   };
-
-  console.log(postInput);
 
   return (
     <div className="share">

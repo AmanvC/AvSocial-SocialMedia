@@ -3,16 +3,15 @@ import "./posts.scss";
 import Post from "./post/Post";
 import { useContext, useEffect, useState } from "react";
 import { makeRequest } from "../../axios";
-import { useToasts } from "react-toast-notifications";
 import { AuthContext } from "../../context/authContext";
 import Share from "../share/Share";
+import toast from "react-hot-toast";
 import Loader from "../loader/Loader";
 
 const Posts = () => {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState(null);
 
-  const { addToast } = useToasts();
   const { logout } = useContext(AuthContext);
 
   useEffect(() => {
@@ -27,16 +26,10 @@ const Posts = () => {
     } catch (err) {
       if (err.response.data === "Unauthorized") {
         logout();
-        addToast("You have been logged out, please login to continue", {
-          appearance: "error",
-          autoDismiss: true,
-        });
+        toast.error("You have been logged out, please login to continue");
         return;
       }
-      addToast("Something went Wrong!", {
-        appearance: "error",
-        autoDismiss: true,
-      });
+      toast.error("Something went Wrong!");
       setLoading(false);
     }
   };
