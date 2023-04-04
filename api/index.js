@@ -8,16 +8,16 @@ const multer = require("multer");
 
 const app = express();
 
-app.use((req, res, next) => {
-  // To be able to send cookies
-  res.header("Access-Control-Allow-Credentials", true);
-  next();
-});
+// app.use((req, res, next) => {
+//   // To be able to send cookies
+//   res.header("Access-Control-Allow-Credentials", true);
+//   next();
+// });
 app.use(cors());
 
 // Handle uploading a file using multer, all upload file request will come here and in other requests we will set path for document field
 const storage = multer.diskStorage({
-  destination: function (req, res, cb) {
+  destination: function (req, file, cb) {
     cb(null, "../client/public/uploads");
   },
   filename: function (req, file, cb) {
