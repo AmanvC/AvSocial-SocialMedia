@@ -170,7 +170,7 @@ const Register = () => {
                     fontSize: 14,
                     position: "absolute",
                     left: 0,
-                    top: "100%",
+                    top: "80%",
                     opacity: 0.7,
                   }}
                 >
