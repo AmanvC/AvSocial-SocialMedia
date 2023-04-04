@@ -8,7 +8,6 @@ module.exports.getPosts = async (req, res) => {
       .sort("-createdAt")
       .lean()
       .populate("user", "_id firstName lastName email");
-    console.log(posts);
     return res.status(200).json({
       success: true,
       message: "posts sent",

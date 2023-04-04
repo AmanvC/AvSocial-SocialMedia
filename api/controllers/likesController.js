@@ -46,12 +46,9 @@ module.exports.addLike = async (req, res) => {
 
 module.exports.deleteLike = async (req, res) => {
   try {
-    console.log("DELETE");
     const postId = req.query.postId;
     const token = req.headers.authorization.split(" ")[1];
     const user = jwt.verify(token, "secretkey");
-    console.log(user);
-    console.log(postId);
     await Like.findOneAndDelete({
       user: user._id,
       likeable: postId,
