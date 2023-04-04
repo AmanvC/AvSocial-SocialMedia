@@ -13,5 +13,10 @@ router.use(
   passport.authenticate("jwt", { session: false }),
   require("./stories")
 );
+router.use(
+  "/likes",
+  passport.authenticate("jwt", { session: false }),
+  require("./likes")
+);
 
 module.exports = router;
