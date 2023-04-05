@@ -41,6 +41,13 @@ const Share = ({ fetchPosts }) => {
     }
   };
 
+  const handleFileChange = (e) => {
+    e.preventDefault();
+    setFile(e.target.files[0]);
+  };
+
+  // console.log(file);
+
   return (
     <div className="share">
       <div className="post-inputs">
@@ -60,7 +67,7 @@ const Share = ({ fetchPosts }) => {
           type="file"
           id="file"
           style={{ display: "none" }}
-          onChange={(e) => setFile(e.target.files[0])}
+          onChange={handleFileChange}
         />
         <label htmlFor="file" className="add-image">
           Upload Image

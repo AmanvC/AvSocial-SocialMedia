@@ -44,7 +44,7 @@ const Post = ({ post, getAllPosts }) => {
   const deletePost = async () => {
     try {
       const res = await makeRequest().delete(`/posts?postId=${post._id}`);
-      await getAllPosts();
+      getAllPosts();
       toast.success(res?.data?.message || "Post deleted successfully.");
     } catch (err) {
       toast.error(err.response.data.message);
