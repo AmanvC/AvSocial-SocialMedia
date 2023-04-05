@@ -28,7 +28,7 @@ const Share = ({ fetchPosts }) => {
       if (file) {
         imgUrl = await upload();
       }
-      await makeRequest().post("/posts/create", {
+      await makeRequest().post("/posts", {
         content: postInput,
         image: imgUrl,
       });
