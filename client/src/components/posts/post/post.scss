@@ -14,39 +14,56 @@
 
   .post-details {
     display: flex;
-    gap: 10px;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
 
-    img {
-      height: 50px;
-      width: 50px;
-      border-radius: 50%;
-      object-fit: cover;
+    .user {
+      display: flex;
+      gap: 10px;
+      align-items: center;
 
-      @include sm {
-        height: 40px;
-        width: 40px;
+      img {
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+
+        @include sm {
+          height: 40px;
+          width: 40px;
+        }
+      }
+
+      .details {
+        .name {
+          font-weight: 600;
+
+          @include sm {
+            font-size: 0.9rem;
+          }
+        }
+
+        .time {
+          font-size: 0.8em;
+          color: gray;
+
+          @include sm {
+            font-size: 0.7rem;
+          }
+        }
       }
     }
 
-    .details {
-      .name {
-        font-weight: 600;
-
-        @include sm {
-          font-size: 0.9rem;
-        }
-      }
-
-      .time {
-        font-size: 0.8em;
-        color: gray;
-
-        @include sm {
-          font-size: 0.7rem;
-        }
-      }
+    .delete-icon {
+      cursor: pointer;
+      font-size: "inherit";
+      color: red;
+      font-size: 1.5em;
+      padding: 2px;
+      outline: 1px dashed red;
+      border-radius: 4px;
+      opacity: 0.6;
     }
   }
 

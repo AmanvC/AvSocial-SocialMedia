@@ -42,8 +42,13 @@ const Posts = () => {
         <>
           <Share fetchPosts={getAllPosts} />
           {posts?.map((post, index) => (
-            <Post key={index} post={post} />
+            <Post key={index} post={post} getAllPosts={getAllPosts} />
           ))}
+          {posts.length === 0 && (
+            <div className="no-posts-available">
+              <p>Uh huh, it seems you and your friends haven't posted yet!</p>
+            </div>
+          )}
         </>
       )}
     </div>
