@@ -7,11 +7,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
-
 ::-webkit-scrollbar {
   display: none;
 }
@@ -25,6 +20,10 @@ code {
   --theme-color: rgb(158, 64, 64);
   --font-color-light: #fff;
   --font-color-dark: #000;
+
+  --font-family: font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  sans-serif;
 }
 
 a {
