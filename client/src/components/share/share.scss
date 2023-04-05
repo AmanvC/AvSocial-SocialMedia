@@ -1,3 +1,5 @@
+@import "../../mixins.scss";
+
 .share {
   width: 100%;
   outline: 1px solid var(--theme-color);
@@ -5,6 +7,10 @@
   padding: 10px;
   border-radius: 10px;
   background-color: #fff;
+
+  @include sm {
+    font-size: 0.8em;
+  }
 
   .post-inputs {
     display: flex;
@@ -19,6 +25,10 @@
       resize: none;
       padding: 20px;
       font-size: 1rem;
+
+      @include sm {
+        padding: 10px;
+      }
 
       &::placeholder {
         opacity: 0.5;
@@ -36,6 +46,7 @@
     display: flex;
     width: 100%;
     justify-content: flex-end;
+    align-items: center;
     gap: 20px;
 
     .add-image {

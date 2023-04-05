@@ -30,11 +30,11 @@ const Post = ({ post }) => {
   const handleLikeToggle = async () => {
     const liked = likes.indexOf(currentUser._id) !== -1;
     if (liked) {
-      const index = likes.indexOf(currentUser._id);
-      setLikes((prev) => prev.slice(index + 1));
+      // const index = likes.indexOf(currentUser._id);
+      // setLikes((prev) => prev.slice(index + 1));
       await makeRequest().delete(`/likes?postId=${post._id}`);
     } else {
-      setLikes((prev) => [...prev, currentUser._id]);
+      // setLikes((prev) => [...prev, currentUser._id]);
       await makeRequest().post("/likes", { postId: post._id });
     }
     getAllLikes();
@@ -71,7 +71,7 @@ const Post = ({ post }) => {
             <AiOutlineHeart />
           )}
         </div>
-        <div className="count">{likes.length} Likes</div>
+        <div className="count">{likes.length} likes</div>
       </div>
     </div>
   );

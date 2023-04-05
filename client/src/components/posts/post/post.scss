@@ -8,6 +8,10 @@
   width: 100%;
   background-color: #fff;
 
+  @include sm {
+    padding: 10px;
+  }
+
   .post-details {
     display: flex;
     gap: 10px;
@@ -19,15 +23,29 @@
       width: 50px;
       border-radius: 50%;
       object-fit: cover;
+
+      @include sm {
+        height: 40px;
+        width: 40px;
+      }
     }
 
     .details {
       .name {
         font-weight: 600;
+
+        @include sm {
+          font-size: 0.9rem;
+        }
       }
 
       .time {
         font-size: 0.8em;
+        color: gray;
+
+        @include sm {
+          font-size: 0.7rem;
+        }
       }
     }
   }
@@ -45,6 +63,11 @@
         @include md {
           aspect-ratio: 1;
         }
+
+        @include sm {
+          width: 100%;
+          height: 100%;
+        }
       }
     }
 
@@ -52,6 +75,10 @@
       font-weight: 400;
       font-size: 1.2em;
       word-break: break-all;
+
+      @include sm {
+        font-size: 1em;
+      }
     }
   }
 
@@ -61,15 +88,20 @@
     align-items: center;
     width: 100%;
     gap: 5px;
+    color: gray;
 
     .like-icon {
-      font-size: 1.5em;
+      font-size: 1.2em;
       cursor: pointer;
     }
 
     .count {
       padding-bottom: 6px;
       font-size: 0.9em;
+
+      @include sm {
+        font-size: 0.7em;
+      }
     }
   }
 }
