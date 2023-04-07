@@ -14,11 +14,6 @@ router.use(
   require("./stories")
 );
 router.use(
-  "/likes",
-  passport.authenticate("jwt", { session: false }),
-  require("./likes")
-);
-router.use(
   "/comments",
   passport.authenticate("jwt", { session: false }),
   require("./comments")
