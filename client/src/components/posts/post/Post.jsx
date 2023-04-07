@@ -120,7 +120,10 @@ const Post = ({ post, getAllPosts }) => {
               <AiOutlineHeart />
             )}
           </div>
-          <div className="likes-count count">{likes.length} likes</div>
+          <div className="likes-count count">
+            {likes.length}
+            <span>{likes.length <= 1 ? " like" : " likes"}</span>
+          </div>
         </div>
         <div
           className="comments-count count"

@@ -48,7 +48,7 @@ const Comment = ({ comment, currentUser, fetchAllComments }) => {
         `/comments/delete?commentId=${comment._id}`
       );
       fetchAllComments();
-      toast.success(res.data.message);
+      toast.success("Comment deleted successfully.");
     } catch (err) {
       toast.error(err.response.data.message);
     }
@@ -64,7 +64,10 @@ const Comment = ({ comment, currentUser, fetchAllComments }) => {
           {comment.user.firstName + " " + comment.user.lastName}
         </div>
         <div className="details">
-          <p className="likes-count">{likes.length} likes</p>
+          <p className="likes-count">
+            {likes.length}
+            <span>{likes.length <= 1 ? " like" : " likes"}</span>
+          </p>
           {currentUser._id === comment.user._id && (
             <p className="delete" onClick={deleteComment}>
               delete
