@@ -129,7 +129,8 @@ const Post = ({ post, getAllPosts }) => {
           className="comments-count count"
           onClick={() => setShowComments(!showComments)}
         >
-          {comments.length} comments
+          {comments.length}
+          <span>{comments.length <= 1 ? " comment" : " comments"}</span>
         </div>
       </div>
       <div className="add-comment">
