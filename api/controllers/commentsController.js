@@ -81,12 +81,11 @@ module.exports.deleteComment = async (req, res) => {
 
 module.exports.getAllCommentLikes = async (req, res) => {
   try {
-    const postId = req.query.commentId;
+    const commentId = req.query.commentId;
     const commentLikes = await Like.find({
-      likeable: postId,
+      likeable: commentId,
       onModel: "Comment",
     });
-    console.log(commentLikes);
     const userIds = commentLikes.map((like) => like.user);
     return res.status(200).json({
       success: true,
@@ -129,19 +128,10 @@ module.exports.unlikeComment = async (req, res) => {
     const commentId = req.query.commentId;
     const token = req.headers.authorization.split(" ")[1];
     const user = jwt.verify(token, "secretkey");
-
-    console.log(commentId);
-    const comment = await Comment.findById(commentId).populate("user");
-    console.log(comment);
-    if (comment.user.id !== user._id) {
-      return res.status(401).json({
-        success: false,
-        message: "You cannot remove this like.",
-      });
-    }
-    await Like.findByIdAndDelete({
+    await Like.deleteOne({
       user: user._id,
       likeable: commentId,
+      onModel: "Comment",
     });
     return res.status(200).json({
       success: true,
