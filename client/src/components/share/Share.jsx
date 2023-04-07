@@ -67,6 +67,7 @@ const Share = ({ fetchPosts }) => {
           type="file"
           id="file"
           style={{ display: "none" }}
+          onClick={(e) => (e.target.value = null)}
           onChange={handleFileChange}
         />
         <label htmlFor="file" className="add-image">
