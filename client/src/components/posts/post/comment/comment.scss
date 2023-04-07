@@ -1,0 +1,67 @@
+@import "../../../../mixins.scss";
+
+.comment {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 10px;
+  border: 1px dashed rgb(220, 220, 220);
+  border-radius: 10px;
+  font-size: 1em;
+
+  @include sm {
+    gap: 10px;
+    font-size: 0.8rem;
+  }
+
+  .profile-image {
+    img {
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+
+      @include sm {
+        height: 30px;
+        width: 30px;
+      }
+    }
+  }
+
+  .comment-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .name {
+      font-weight: 600;
+    }
+
+    .details {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-size: 0.8em;
+      color: gray;
+
+      .delete {
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .comment-content-text {
+      margin-top: 10px;
+      word-break: break-all;
+    }
+  }
+
+  .like-action {
+    cursor: pointer;
+    color: gray;
+    font-size: 1.2em;
+  }
+}

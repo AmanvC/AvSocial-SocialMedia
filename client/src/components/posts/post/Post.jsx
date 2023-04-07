@@ -9,14 +9,19 @@ import toast from "react-hot-toast";
 
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { MdDeleteForever } from "react-icons/md";
+import Comment from "./comment/Comment";
 
 const Post = ({ post, getAllPosts }) => {
   const [likes, setLikes] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [showComments, setShowComments] = useState(false);
+  const [commentInput, setCommentInput] = useState("");
 
   const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
     getAllLikes();
+    fetchAllComments();
   }, [post]);
 
   const getAllLikes = async () => {
@@ -24,7 +29,17 @@ const Post = ({ post, getAllPosts }) => {
       const res = await makeRequest().get(`/likes?postId=${post._id}`);
       setLikes(res.data.data);
     } catch (err) {
-      toast.error("Something went wrong!");
+      toast.error(err.response.data.message);
+    }
+  };
+
+  const fetchAllComments = async () => {
+    try {
+      const res = await makeRequest().get("/comments?postId=" + post._id);
+      setComments(res.data.data);
+    } catch (err) {
+      console.log(err);
+      toast.error(err.response.data.message);
     }
   };
 
@@ -51,11 +66,28 @@ const Post = ({ post, getAllPosts }) => {
     }
   };
 
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await makeRequest().post(
+        `/comments/create?postId=${post._id}`,
+        {
+          content: commentInput,
+        }
+      );
+      fetchAllComments();
+      toast.success(res.data.message);
+      setCommentInput("");
+    } catch (err) {
+      toast.error(err.response.data.message);
+    }
+  };
+
   return (
     <div className="post">
       <div className="post-details">
         <div className="user">
-          <img src={Image} alt="image" />
+          <img className="current-user-image" src={Image} alt="" />
           <div className="details">
             <p className="name">
               {post.user.firstName + " " + post.user.lastName}
@@ -80,14 +112,58 @@ const Post = ({ post, getAllPosts }) => {
         )}
       </div>
       <div className="actions-container">
-        <div className="like-icon" onClick={handleLikeToggle}>
-          {likes.indexOf(currentUser._id) !== -1 ? (
-            <AiFillHeart style={{ color: "red" }} />
-          ) : (
-            <AiOutlineHeart />
-          )}
+        <div className="likes">
+          <div className="like-icon" onClick={handleLikeToggle}>
+            {likes.indexOf(currentUser._id) !== -1 ? (
+              <AiFillHeart style={{ color: "red" }} />
+            ) : (
+              <AiOutlineHeart />
+            )}
+          </div>
+          <div className="likes-count count">{likes.length} likes</div>
         </div>
-        <div className="count">{likes.length} likes</div>
+        <div
+          className="comments-count count"
+          onClick={() => setShowComments(!showComments)}
+        >
+          {comments.length} comments
+        </div>
+      </div>
+      <div className="add-comment">
+        <img src={Image} className="current-user-image" alt="" />
+        <form onSubmit={handleCommentSubmit}>
+          <input
+            type="text"
+            placeholder="Add comment..."
+            onChange={(e) => setCommentInput(e.target.value)}
+            value={commentInput}
+          />
+          <input
+            type="submit"
+            value="Add"
+            disabled={commentInput.length === 0}
+          />
+        </form>
+      </div>
+      <div
+        className="comments-container"
+        style={{ display: !showComments ? "none" : "flex" }}
+      >
+        {showComments &&
+          (comments.length === 0 ? (
+            <p>No comments yet.</p>
+          ) : (
+            <>
+              {comments.map((comment) => (
+                <Comment
+                  key={comment._id}
+                  comment={comment}
+                  currentUser={currentUser}
+                  fetchAllComments={fetchAllComments}
+                />
+              ))}
+            </>
+          ))}
       </div>
     </div>
   );
