@@ -134,7 +134,6 @@ const Post = ({ post, getAllPosts }) => {
         </div>
       </div>
       <div className="add-comment">
-        <img src={Image} className="current-user-image" alt="" />
         <form onSubmit={handleCommentSubmit}>
           <input
             type="text"

@@ -140,6 +140,7 @@
 
   .add-comment {
     display: flex;
+    width: 100%;
     align-items: center;
     gap: 10px;
     margin-top: 15px;
@@ -156,7 +157,7 @@
       input[type="text"] {
         flex: 1;
         padding: 8px 10px;
-        font-size: 1.2rem;
+        font-size: 1.2em;
         border: 1px solid lightgray;
         border-radius: 5px;
         outline: none;
@@ -167,6 +168,10 @@
 
         &:focus {
           border: 1px solid gray;
+        }
+
+        @include md {
+          font-size: 1em;
         }
 
         @include sm {
@@ -192,6 +197,10 @@
           opacity: 0.5;
           cursor: not-allowed;
           transform: scale(1);
+        }
+
+        @include md {
+          font-size: 1em;
         }
 
         @include sm {

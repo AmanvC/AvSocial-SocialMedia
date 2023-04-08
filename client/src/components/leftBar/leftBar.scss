@@ -6,6 +6,7 @@
   padding: 20px;
   border-radius: 10px;
   margin-right: 20px;
+  flex-shrink: 0;
 
   @include md {
     display: none;
