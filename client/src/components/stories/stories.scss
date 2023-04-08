@@ -1,0 +1,124 @@
+@import "../../mixins.scss";
+
+.stories {
+  margin-top: 10px;
+  min-height: 200px;
+  outline: 1px solid var(--theme-color);
+  box-shadow: 1px 1px 10px gray;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #fff;
+  overflow-x: scroll;
+  display: flex;
+  gap: 10px;
+
+  @include sm {
+    min-height: 60px;
+    padding: 5px;
+  }
+
+  .upload-story {
+    position: relative;
+    min-width: 120px;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // background-color: gray;
+    background: radial-gradient(var(--theme-color), rgb(96, 96, 96));
+    color: #fff;
+
+    @include sm {
+      min-width: 50px;
+      max-height: 50px;
+      border-radius: 50%;
+    }
+
+    .text {
+      @include sm {
+        display: none;
+      }
+    }
+
+    .add {
+      position: absolute;
+      font-size: 2em;
+      color: blue;
+      left: 10px;
+      bottom: 10px;
+      padding: 5px;
+      background-color: #fff;
+      border-radius: 50%;
+      cursor: pointer;
+
+      @include sm {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+
+  .uploaded-image {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      max-width: 90vw;
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 40px;
+      gap: 20px;
+
+      @include sm {
+        padding: 20px;
+      }
+
+      img {
+        height: 500px;
+        max-width: 100%;
+        aspect-ratio: 1/1.5;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 1px 1px 10px black;
+
+        @include sm {
+          height: 350px;
+        }
+      }
+
+      .buttons {
+        display: flex;
+        gap: 10px;
+        font-size: 1.2em;
+
+        button {
+          cursor: pointer;
+
+          &:active {
+            transform: scale(0.95);
+          }
+        }
+
+        .upload {
+          background-color: black;
+          color: #fff;
+        }
+      }
+    }
+  }
+}
