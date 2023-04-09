@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 module.exports.getStories = async (req, res) => {
   try {
-    const stories = await Story.find({});
+    const stories = await Story.find({}).populate("user").sort("-createdAt");
     return res.status(200).json({
       success: true,
       stories: stories,
