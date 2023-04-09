@@ -2,23 +2,44 @@
 
 .story {
   position: relative;
+  box-shadow: 1px 1px 10px black;
+  border-radius: 10px;
+
+  @include sm {
+    border-radius: 50%;
+  }
 
   .layer {
     position: absolute;
     height: 100%;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-align: center;
     border-radius: 10px;
 
     @include sm {
       height: 50px;
       width: 50px;
       border-radius: 50%;
+
+      .text {
+        display: none;
+      }
     }
 
     &:hover {
-      opacity: 0;
+      opacity: 0.4;
+      transform: scale(1.05);
       cursor: pointer;
+
+      .text {
+        display: none;
+      }
     }
   }
 
@@ -32,6 +53,98 @@
       height: 50px;
       width: 50px;
       border-radius: 50%;
+    }
+  }
+}
+
+.show-story-wrapper {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  transition: 0.25s ease-in-out;
+
+  .show-story {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 90vw;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 40px;
+    gap: 20px;
+    position: relative;
+
+    @include sm {
+      padding: 20px;
+    }
+
+    .user-details {
+      display: flex;
+      width: 100%;
+      gap: 15px;
+      align-items: center;
+
+      .user-image {
+        height: 40px;
+        width: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+
+      .details {
+        .user-name {
+          font-weight: 600;
+        }
+
+        .moment {
+          font-size: 0.8em;
+          color: grey;
+        }
+      }
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.5em;
+      cursor: pointer;
+      user-select: none;
+
+      &:active {
+        transform: scale(0.9);
+      }
+
+      @include sm {
+        top: 5px;
+        right: 15px;
+      }
+    }
+
+    .view-story {
+      height: 700px;
+      max-width: 100%;
+      aspect-ratio: 1/1.5;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 1px 1px 10px black;
+
+      @include sm {
+        height: 400px;
+      }
+    }
+
+    .delete {
+      color: #fff;
+      background-color: red;
     }
   }
 }

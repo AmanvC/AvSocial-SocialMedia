@@ -84,7 +84,9 @@ const Stories = () => {
         </div>
       )}
       {stories.map((story) => {
-        return <Story story={story} />;
+        return (
+          <Story key={story._id} story={story} fetchStories={fetchStories} />
+        );
       })}
       {/* <Story /> */}
     </div>
