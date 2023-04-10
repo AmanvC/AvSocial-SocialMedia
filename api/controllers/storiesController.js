@@ -1,6 +1,7 @@
 const Story = require("../models/Story");
-
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const path = require("path");
 
 module.exports.getStories = async (req, res) => {
   try {
@@ -42,7 +43,6 @@ module.exports.createStory = async (req, res) => {
 module.exports.deleteStory = async (req, res) => {
   try {
     const storyId = req.query.storyId;
-    console.log(storyId);
     const token = req.headers.authorization.split(" ")[1];
     const user = jwt.verify(token, "secretkey");
     const story = await Story.findById(storyId).populate("user");
@@ -52,6 +52,9 @@ module.exports.deleteStory = async (req, res) => {
         message: "You cannot delete this story!",
       });
     }
+    fs.unlinkSync(
+      path.join(__dirname, `../../client/public/uploads/${story.image}`)
+    );
     await Story.findByIdAndDelete(storyId);
     return res.status(200).json({
       success: true,
