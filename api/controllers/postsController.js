@@ -3,6 +3,8 @@ const Comment = require("../models/Comment");
 const Like = require("../models/Like");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const path = require("path");
 
 module.exports.getPosts = async (req, res) => {
   try {
@@ -65,9 +67,28 @@ module.exports.deletePost = async (req, res) => {
         message: "You cannot delete this post!",
       });
     }
-    await Post.findByIdAndDelete(postId);
-    await Comment.deleteMany({ post: postId });
+
+    if (post.image) {
+      fs.unlinkSync(
+        path.join(__dirname, `../../client/public/uploads/${post.image}`)
+      );
+    }
+
+    // delete comment likes
+    const comments = await Comment.find({ post: postId });
+    comments.forEach(async (comment) => {
+      await Like.deleteMany({ likeable: comment.id });
+    });
+
+    // delete post likes
     await Like.deleteMany({ likeable: postId });
+
+    // delete post comments
+    await Comment.deleteMany({ post: postId });
+
+    // delete post
+    await Post.findByIdAndDelete(postId);
+
     return res.status(200).json({
       success: true,
       message: "Post deleted successfully.",
