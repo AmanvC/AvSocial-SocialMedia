@@ -13,9 +13,11 @@ import PageNotFound from "./pages/404/PageNotFound";
 import LeftBar from "./components/leftBar/LeftBar";
 import RightBar from "./components/rightBar/RightBar";
 import ContentWrapper from "./components/contentWrapper/ContentWrapper";
+import Profile from "./pages/profile/Profile";
+import Loader from "./components/loader/Loader";
 
 function App() {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, loading } = useContext(AuthContext);
 
   const Layout = ({ children }) => {
     return (
@@ -34,10 +36,14 @@ function App() {
 
   const ProtectedRoute = ({ children }) => {
     if (!currentUser) {
-      return <Navigate to="/login" replace />;
+      return <Navigate to="/login" />;
     }
     return children;
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="App">
@@ -49,6 +55,16 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <Home />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/:id"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Profile />
               </Layout>
             </ProtectedRoute>
           }

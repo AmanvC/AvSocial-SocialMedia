@@ -12,6 +12,7 @@ export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const userToken = getItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
@@ -19,9 +20,11 @@ export const AuthContextProvider = ({ children }) => {
       let user = jwt(userToken);
       setCurrentUser(user);
     }
+    setLoading(false);
   }, []);
 
   const login = async (email, password) => {
+    setLoading(true);
     const { data } = await makeRequest().post("/users/create-session", {
       email,
       password,
@@ -30,6 +33,7 @@ export const AuthContextProvider = ({ children }) => {
       setItemInLocalStorage(LOCALSTORAGE_TOKEN_KEY, data.token);
       setCurrentUser(jwt(data.token));
     }
+    setLoading(false);
   };
 
   const logout = () => {
@@ -38,7 +42,7 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, login, logout }}>
+    <AuthContext.Provider value={{ currentUser, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
