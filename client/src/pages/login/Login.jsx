@@ -61,12 +61,12 @@ const Login = () => {
                 <span>Continue with Google</span>
               </div>
             </Link>
-            <a href="/auth/facebook">
+            <Link to="/auth/facebook">
               <div className="social-signup">
                 {/* <i className="fa-brands fa-facebook"></i> */}
                 <span>Continue with Facebook</span>
               </div>
-            </a>
+            </Link>
             <div className="local-signup">
               <Link to="/register">Register with email</Link>
             </div>

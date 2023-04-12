@@ -8,6 +8,8 @@ import { LOCALSTORAGE_TOKEN_KEY } from "../utils/constants";
 import { makeRequest } from "../axios";
 import jwt from "jwt-decode";
 
+import toast from "react-hot-toast";
+
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
@@ -24,16 +26,16 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    setLoading(true);
-    const { data } = await makeRequest().post("/users/create-session", {
-      email,
-      password,
-    });
-    if (data?.success) {
-      setItemInLocalStorage(LOCALSTORAGE_TOKEN_KEY, data.token);
-      setCurrentUser(jwt(data.token));
+    try {
+      const res = await makeRequest().post("/users/create-session", {
+        email,
+        password,
+      });
+      setItemInLocalStorage(LOCALSTORAGE_TOKEN_KEY, res.data.token);
+      setCurrentUser(jwt(res.data.token));
+    } catch (err) {
+      toast.error(err.response.data.message || "Internal server error!");
     }
-    setLoading(false);
   };
 
   const logout = () => {
