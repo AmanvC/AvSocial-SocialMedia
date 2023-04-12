@@ -138,8 +138,6 @@ const Profile = () => {
     return <>Invalid user ID</>;
   }
 
-  console.log(userProfile);
-
   return (
     <>
       <div className="profile">
@@ -177,7 +175,7 @@ const Profile = () => {
         </div>
         <div className="posts" style={{ margin: 10 }}>
           {userPosts?.map((post) => (
-            <Post post={post} getAllPosts={getProfileInfo} />
+            <Post key={post._id} post={post} getAllPosts={getProfileInfo} />
           ))}
         </div>
       </div>
