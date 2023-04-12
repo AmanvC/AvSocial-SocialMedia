@@ -7,6 +7,7 @@ import "./story.scss";
 import { AuthContext } from "../../../context/authContext";
 import Image from "../../../assets/test.jpeg";
 import { makeRequest } from "../../../axios";
+import { Link } from "react-router-dom";
 
 const Story = ({ story, fetchStories }) => {
   const [showStory, setShowStory] = useState(false);
@@ -40,7 +41,9 @@ const Story = ({ story, fetchStories }) => {
               <img src={Image} alt="" className="user-image" />
               <div className="details">
                 <p className="user-name">
-                  {story.user.firstName + " " + story.user.lastName}
+                  <Link to={`/profile/${story.user._id}`}>
+                    {story.user.firstName + " " + story.user.lastName}
+                  </Link>
                 </p>
                 <p className="moment">{moment(story.createdAt).fromNow()}</p>
               </div>

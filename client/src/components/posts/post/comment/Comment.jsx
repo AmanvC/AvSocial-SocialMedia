@@ -5,6 +5,7 @@ import { makeRequest } from "../../../../axios";
 import toast from "react-hot-toast";
 import moment from "moment";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 const Comment = ({ comment, currentUser, fetchAllComments }) => {
   const [likes, setLikes] = useState([]);
@@ -61,7 +62,9 @@ const Comment = ({ comment, currentUser, fetchAllComments }) => {
       </div>
       <div className="comment-content">
         <div className="name">
-          {comment.user.firstName + " " + comment.user.lastName}
+          <Link to={`/profile/${comment.user._id}`}>
+            {comment.user.firstName + " " + comment.user.lastName}
+          </Link>
         </div>
         <div className="details">
           <p className="likes-count">

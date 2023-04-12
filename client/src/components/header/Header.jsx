@@ -45,7 +45,11 @@ const Header = () => {
           >
             🔍
           </p>
-          <p className="user-name">{currentUser.firstName}</p>
+          <p className="user-name">
+            <Link to={`/profile/${currentUser._id}`}>
+              {currentUser.firstName}
+            </Link>
+          </p>
           <button className="logout" onClick={handleLogoutClick}>
             Logout
           </button>

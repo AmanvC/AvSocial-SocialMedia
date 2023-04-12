@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { MdDeleteForever } from "react-icons/md";
 import Comment from "./comment/Comment";
+import { Link } from "react-router-dom";
 
 const Post = ({ post, getAllPosts }) => {
   const [likes, setLikes] = useState([]);
@@ -90,7 +91,9 @@ const Post = ({ post, getAllPosts }) => {
           <img className="current-user-image" src={Image} alt="" />
           <div className="details">
             <p className="name">
-              {post.user.firstName + " " + post.user.lastName}
+              <Link to={`/profile/${post.user._id}`}>
+                {post.user.firstName + " " + post.user.lastName}
+              </Link>
             </p>
             <p className="time">{moment(post.createdAt).fromNow()}</p>
           </div>
