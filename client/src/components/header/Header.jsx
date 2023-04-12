@@ -82,12 +82,12 @@ const Header = () => {
             {showUserOptions && (
               <div className="user-options" ref={userOptionRef}>
                 <ul>
-                  <li>
+                  <li onClick={() => setShowUserOptions(false)}>
                     <Link to={`/profile/${currentUser._id}`}>
                       <AiOutlineUser /> <span>Profile</span>
                     </Link>
                   </li>
-                  <li>
+                  <li onClick={() => setShowUserOptions(false)}>
                     <Link to={`/settings`}>
                       <TbSettings /> <span>Settings</span>
                     </Link>
