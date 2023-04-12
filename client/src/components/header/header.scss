@@ -33,7 +33,7 @@
         text-shadow: 4px 4px 10px black;
 
         @include sm {
-          font-size: 2em;
+          font-size: 2.5em;
         }
       }
     }
@@ -99,17 +99,63 @@
 
         @include sm {
           display: block;
+          font-size: 2em;
         }
       }
 
-      .user-name {
-        font-size: 1.5em;
-        cursor: pointer;
-        user-select: none;
-      }
+      .user-details {
+        position: relative;
+        .user-info {
+          cursor: pointer;
+          height: 50px;
+          width: 50px;
+          object-fit: cover;
+          border-radius: 50%;
+          box-shadow: 1px 1px 10px black;
 
-      .logout {
-        background-color: var(--font-color-light);
+          @include sm {
+            height: 35px;
+            width: 35px;
+          }
+        }
+
+        .user-options {
+          position: absolute;
+          top: 110%;
+          background-color: #fff;
+          right: 0;
+          color: #000;
+          width: auto;
+          white-space: nowrap;
+          padding: 10px;
+          border-radius: 5px;
+          font-weight: 600;
+          box-shadow: 1px 1px 10px gray;
+
+          ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            // gap: 10px;
+
+            li {
+              padding: 5px;
+              cursor: pointer;
+              transition: 0.25s;
+
+              &:hover {
+                background-color: lightgray;
+                border-radius: 5px;
+              }
+
+              span {
+                position: relative;
+                bottom: 2px;
+              }
+            }
+          }
+        }
       }
     }
   }
