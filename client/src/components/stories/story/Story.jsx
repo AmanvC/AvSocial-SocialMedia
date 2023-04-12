@@ -1,8 +1,9 @@
+import "./story.scss";
+import NoUserImage from "../../../assets/NoUserImage.png";
+
 import { useContext, useState } from "react";
 import moment from "moment";
 import toast from "react-hot-toast";
-
-import "./story.scss";
 
 import { AuthContext } from "../../../context/authContext";
 import Image from "../../../assets/test.jpeg";
@@ -38,7 +39,15 @@ const Story = ({ story, fetchStories }) => {
         <div className="show-story-wrapper">
           <div className="show-story">
             <div className="user-details">
-              <img src={Image} alt="" className="user-image" />
+              <img
+                src={
+                  story.user.profileImage
+                    ? `/uploads/${story.user.profileImage}`
+                    : NoUserImage
+                }
+                alt=""
+                className="user-image"
+              />
               <div className="details">
                 <p className="user-name">
                   <Link to={`/profile/${story.user._id}`}>

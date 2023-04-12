@@ -1,5 +1,5 @@
 import "./post.scss";
-import Image from "../../../assets/test.jpeg";
+import NoUserImage from "../../../assets/NoUserImage.png";
 
 import moment from "moment";
 import { useContext, useEffect, useState } from "react";
@@ -88,7 +88,15 @@ const Post = ({ post, getAllPosts }) => {
     <div className="post">
       <div className="post-details">
         <div className="user">
-          <img className="current-user-image" src={Image} alt="" />
+          <img
+            className="current-user-image"
+            src={
+              post.user.profileImage
+                ? `/uploads/${post.user.profileImage}`
+                : NoUserImage
+            }
+            alt=""
+          />
           <div className="details">
             <p className="name">
               <Link to={`/profile/${post.user._id}`}>
