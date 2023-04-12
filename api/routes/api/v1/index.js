@@ -18,5 +18,10 @@ router.use(
   passport.authenticate("jwt", { session: false }),
   require("./comments")
 );
+router.use(
+  "/profile",
+  passport.authenticate("jwt", { session: false }),
+  require("./profile")
+);
 
 module.exports = router;
