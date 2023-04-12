@@ -22,12 +22,12 @@ module.exports.createSession = async (req, res) => {
     const { password, ...otherData } = user;
     return res.status(200).json({
       success: true,
-      token: jwt.sign(otherData, "secretkey", { expiresIn: 10000 }),
+      token: jwt.sign(otherData, "secretkey"),
     });
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: err,
+      message: "Internal server error!",
     });
   }
 };
