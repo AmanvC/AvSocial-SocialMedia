@@ -11,7 +11,7 @@ module.exports.getPosts = async (req, res) => {
     const posts = await Post.find({})
       .sort("-createdAt")
       .lean()
-      .populate("user", "_id firstName lastName email");
+      .populate("user", "_id firstName lastName email profileImage");
     return res.status(200).json({
       success: true,
       message: "posts sent",

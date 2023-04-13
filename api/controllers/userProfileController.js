@@ -16,7 +16,10 @@ module.exports.getUserDetails = async (req, res) => {
     }
     const { password, ...otherData } = user;
 
-    const userPosts = await Post.find({ user: userId }).populate("user");
+    const userPosts = await Post.find({ user: userId }).populate(
+      "user",
+      "_id firstName lastName profileImage"
+    );
 
     return res.status(200).json({
       success: true,
