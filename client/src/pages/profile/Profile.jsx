@@ -10,6 +10,7 @@ import Loader from "../../components/loader/Loader";
 import NoUserImage from "../../assets/NoUserImage.png";
 import NoCoverImage from "../../assets/NoCoverImage.jpg";
 import Post from "../../components/posts/post/Post";
+import ProfileButton from "../../components/profileButton/ProfileButton";
 
 const Profile = () => {
   const userId = useLocation().pathname.split("/")[2];
@@ -170,11 +171,12 @@ const Profile = () => {
             <p className="user-name">
               {userProfile.firstName + " " + userProfile.lastName}
             </p>
-            {userProfile._id === currentUser._id ? (
-              <button onClick={updateProfile}>Update Profile</button>
-            ) : (
-              <button>Add Friend</button>
-            )}
+            <ProfileButton
+              userProfile={userProfile}
+              currentUser={currentUser}
+              updateProfile={updateProfile}
+              userId={userId}
+            />
           </div>
         </div>
         <div className="posts" style={{ margin: 10 }}>

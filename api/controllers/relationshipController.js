@@ -7,7 +7,7 @@ module.exports.getRelationshipStatus = async (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
     const currentUser = jwt.verify(token, "secretkey");
 
-    const otherUserId = req.body.user_id;
+    const otherUserId = req.params.user_id;
 
     const relationship = await Relationship.findOne({
       sentBy: { $in: [currentUser._id, otherUserId] },
