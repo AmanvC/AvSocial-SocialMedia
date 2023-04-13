@@ -28,7 +28,7 @@ const Profile = () => {
 
   useEffect(() => {
     getProfileInfo();
-  }, []);
+  }, [userId]);
 
   const getProfileInfo = async () => {
     try {
