@@ -21,8 +21,12 @@ const Share = ({ fetchPosts }) => {
     }
   };
 
-  const handleAddPost = async (e) => {
+  const handleAddPost = (e) => {
     e.preventDefault();
+    callAddPostAPI();
+  };
+
+  const callAddPostAPI = async () => {
     try {
       let imgUrl = "";
       if (file) {

@@ -79,8 +79,12 @@ const Profile = () => {
     }
   };
 
-  const handleUpdateProfile = async (e) => {
+  const handleUpdateProfile = (e) => {
     e.preventDefault();
+    callUpdateProfileAPI();
+  };
+
+  const callUpdateProfileAPI = async () => {
     try {
       setLoading(true);
       let profileUrl = "";
