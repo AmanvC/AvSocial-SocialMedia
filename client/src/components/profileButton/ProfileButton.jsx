@@ -3,85 +3,96 @@ import toast from "react-hot-toast";
 import { GoCheck } from "react-icons/go";
 import { AiFillCaretDown } from "react-icons/ai";
 import { HiUserRemove } from "react-icons/hi";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 
 import "./profileButton.scss";
 import { makeRequest } from "../../axios";
 
 const ProfileButton = ({ userProfile, currentUser, updateProfile, userId }) => {
-  const [relationship, setRelationship] = useState({});
-  const [loading, setLoading] = useState(true);
   const [showRemoveFriend, setShowRemoveFriend] = useState(false);
 
-  useEffect(() => {
-    getUserRelationship();
-  }, []);
+  const queryClient = useQueryClient();
 
-  console.log(relationship);
-
-  const getUserRelationship = async () => {
-    try {
-      setLoading(true);
+  const { isLoading, data: relationship } = useQuery({
+    queryKey: ["userRelationship"],
+    queryFn: async () => {
       const res = await makeRequest().get(`/relationship/status/${userId}`);
-      setLoading(false);
-      console.log(res);
-      if (res.data?.success) {
-        setRelationship(res.data.data);
-      }
-    } catch (err) {
-      setLoading(false);
-      console.log(err);
-      toast.error(err.response.data.message || "Something went wrong!");
-    }
-  };
+      return res.data.data;
+    },
+  });
 
-  const handleAddFriend = async () => {
-    try {
-      setLoading(true);
-      const res = await makeRequest().post("/relationship/create", {
+  const acceptRequestMutation = useMutation({
+    mutationFn: () => {
+      return makeRequest().post("/relationship/accept", {
         user_id: userId,
       });
-      setLoading(false);
+    },
+    onSuccess: (res) => {
       toast.success(res.data.message);
-      getUserRelationship();
-    } catch (err) {
-      setLoading(false);
-      console.log(err);
-      toast.error(err.response.data.message || "Something went wrong!");
-    }
-  };
+      queryClient.invalidateQueries(["userRelationship"], {
+        exact: true,
+      });
+      queryClient.invalidateQueries(["pendingRequests"], {
+        exact: true,
+      });
+    },
+    onError: (res) => {
+      toast.error(res.response.data.message);
+    },
+  });
 
-  const handleAcceptRequest = async () => {
-    try {
-      setLoading(true);
-      const res = await makeRequest().post("/relationship/accept", {
+  const addFriendMutation = useMutation({
+    mutationFn: () => {
+      return makeRequest().post("/relationship/create", {
         user_id: userId,
       });
-      setLoading(false);
+    },
+    onSuccess: (res) => {
       toast.success(res.data.message);
-      getUserRelationship();
-    } catch (err) {
-      setLoading(false);
-      console.log(err);
-      toast.error(err.response.data.message || "Something went wrong!");
-    }
-  };
+      queryClient.invalidateQueries(["userRelationship"], {
+        exact: true,
+      });
+      queryClient.invalidateQueries(["pendingRequests"], {
+        exact: true,
+      });
+    },
+    onError: (res) => {
+      toast.error(res.response.data.message);
+    },
+  });
 
-  const handleDeleteRequest = async (toastMessage) => {
-    try {
-      setLoading(true);
-      const res = await makeRequest().delete("/relationship/delete", {
+  const deleteRequestMutation = useMutation({
+    mutationFn: () => {
+      return makeRequest().delete("/relationship/delete", {
         data: {
           user_id: userId,
         },
       });
-      setLoading(false);
-      toast.success(toastMessage);
-      getUserRelationship();
-    } catch (err) {
-      setLoading(false);
-      console.log(err);
-      toast.error(err.response.data.message || "Something went wrong!");
-    }
+    },
+    onSuccess: (res, variables) => {
+      toast.success(variables);
+      queryClient.invalidateQueries(["userRelationship"], {
+        exact: true,
+      });
+      queryClient.invalidateQueries(["pendingRequests"], {
+        exact: true,
+      });
+    },
+    onError: (res) => {
+      toast.error(res.response.data.message);
+    },
+  });
+
+  const handleAddFriend = () => {
+    addFriendMutation.mutate();
+  };
+
+  const handleAcceptRequest = () => {
+    acceptRequestMutation.mutate();
+  };
+
+  const handleDeleteRequest = async (toastMessage) => {
+    deleteRequestMutation.mutate(toastMessage);
   };
 
   const OutsideClick = (ref, state) => {
@@ -99,9 +110,11 @@ const ProfileButton = ({ userProfile, currentUser, updateProfile, userId }) => {
   const removeFriendRef = useRef(null);
   OutsideClick(removeFriendRef, setShowRemoveFriend);
 
+  console.log(isLoading);
+
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <button
           style={{ transform: "scale(1)", opacity: 0.6, cursor: "not-allowed" }}
         >
