@@ -3,9 +3,8 @@
 .leftbar {
   background-color: #fff;
   box-shadow: 1px 1px 10px gray;
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
-  margin-right: 20px;
   flex-shrink: 0;
 
   @include md {

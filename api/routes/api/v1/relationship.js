@@ -10,5 +10,6 @@ router.post("/accept", relationshipController.acceptRelationship);
 //   relationshipController.deleteRelationshipRequest
 // );
 router.delete("/delete", relationshipController.deleteRelationship);
+router.get("/pending", relationshipController.pendingRelationships);
 
 module.exports = router;

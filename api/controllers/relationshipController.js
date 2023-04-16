@@ -103,3 +103,26 @@ module.exports.deleteRelationship = async (req, res) => {
     });
   }
 };
+
+module.exports.pendingRelationships = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const user = jwt.verify(token, "secretkey");
+
+    const relationships = await Relationship.find({
+      sentTo: user._id,
+      status: "Not Accepted",
+    }).populate("sentBy", "_id firstName lastName profileImage");
+
+    return res.status(200).json({
+      success: true,
+      data: relationships,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error!",
+    });
+  }
+};

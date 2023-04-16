@@ -7,15 +7,23 @@ import { AuthContextProvider } from "./context/authContext";
 import { ToastProvider } from "react-toast-notifications";
 import { StrictMode } from "react";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+const queryClient = new QueryClient();
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <QueryClientProvider client={queryClient}>
     <BrowserRouter>
       <ToastProvider>
         <AuthContextProvider>
           <App />
+          <ReactQueryDevtools />
         </AuthContextProvider>
       </ToastProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  </QueryClientProvider>
+  // </React.StrictMode>
 );
