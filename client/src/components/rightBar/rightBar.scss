@@ -11,6 +11,7 @@
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
+  border: 1px solid var(--theme-color);
 
   @include smd {
     display: none;

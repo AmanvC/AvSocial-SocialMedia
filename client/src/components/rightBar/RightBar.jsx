@@ -51,13 +51,15 @@ const RightBar = () => {
         <h3>Pending Requests</h3>
         <div className="pending-requests">
           {requests?.length === 0 ? (
-            <p>No pending requests.</p>
+            <p style={{ textAlign: "center" }}>No pending requests.</p>
           ) : (
             requests?.map((request) => (
               <div className="element" key={request._id}>
                 <div className="user-info">
                   <img
-                    src={request?.sentBy?.profileImage || NoUserImage}
+                    src={
+                      "/uploads/" + request?.sentBy?.profileImage || NoUserImage
+                    }
                     className="user-image"
                   />
                   <div className="info">
