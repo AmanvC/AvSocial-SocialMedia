@@ -2,7 +2,7 @@ import "./post.scss";
 import NoUserImage from "../../../assets/NoUserImage.png";
 
 import moment from "moment";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../../context/authContext";
 import { makeRequest } from "../../../axios";
 import toast from "react-hot-toast";
@@ -11,77 +11,91 @@ import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { MdDeleteForever } from "react-icons/md";
 import Comment from "./comment/Comment";
 import { Link } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-const Post = ({ post, getAllPosts }) => {
-  const [likes, setLikes] = useState([]);
-  const [comments, setComments] = useState([]);
+const Post = ({ post }) => {
   const [showComments, setShowComments] = useState(false);
   const [commentInput, setCommentInput] = useState("");
-
   const { currentUser } = useContext(AuthContext);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    getAllLikes();
-    fetchAllComments();
-  }, [post]);
-
-  const getAllLikes = async () => {
-    try {
-      const res = await makeRequest().get(`/posts/likes?postId=${post._id}`);
-      setLikes(res.data.data);
-    } catch (err) {
-      toast.error(err.response.data.message);
-    }
-  };
-
-  const fetchAllComments = async () => {
-    try {
+  const {
+    isLoading: commentsLoading,
+    data: comments,
+    error: commentsError,
+  } = useQuery({
+    queryKey: ["postComments", post._id],
+    queryFn: async () => {
       const res = await makeRequest().get("/comments?postId=" + post._id);
-      setComments(res.data.data);
-    } catch (err) {
-      console.log(err);
-      toast.error(err.response.data.message);
-    }
-  };
+      return res.data.data;
+    },
+  });
+
+  const {
+    isLoading: likesLoading,
+    data: likes,
+    error: likesError,
+  } = useQuery({
+    queryKey: ["postLikes", post._id],
+    queryFn: async () => {
+      const res = await makeRequest().get(`/posts/likes?postId=${post._id}`);
+      return res.data.data;
+    },
+  });
+
+  const likesMutation = useMutation({
+    mutationFn: async (liked) => {
+      if (liked) {
+        return makeRequest().delete(`/posts/like/delete?postId=${post._id}`);
+      }
+      return makeRequest().post("/posts/like/create", { postId: post._id });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["postLikes", post._id]);
+    },
+  });
 
   const handleLikeToggle = async () => {
     const liked = likes.indexOf(currentUser._id) !== -1;
-    if (liked) {
-      // const index = likes.indexOf(currentUser._id);
-      // setLikes((prev) => prev.slice(index + 1));
-      await makeRequest().delete(`/posts/like/delete?postId=${post._id}`);
-    } else {
-      // setLikes((prev) => [...prev, currentUser._id]);
-      await makeRequest().post("/posts/like/create", { postId: post._id });
-    }
-    await getAllLikes();
+    likesMutation.mutate(liked);
   };
 
-  const deletePost = async () => {
-    try {
-      const res = await makeRequest().delete(`/posts?postId=${post._id}`);
-      getAllPosts();
+  const deletePostMutation = useMutation({
+    mutationFn: () => {
+      return makeRequest().delete(`/posts?postId=${post._id}`);
+    },
+    onSuccess: (res) => {
       toast.success(res?.data?.message || "Post deleted successfully.");
-    } catch (err) {
+      queryClient.invalidateQueries(["posts"]);
+    },
+    onError: (err) => {
       toast.error(err.response.data.message);
-    }
+    },
+  });
+
+  const deletePost = async () => {
+    deletePostMutation.mutate();
   };
+
+  const submitCommentMutation = useMutation({
+    mutationFn: async () => {
+      return await makeRequest().post(`/comments/create?postId=${post._id}`, {
+        content: commentInput,
+      });
+    },
+    onSuccess: (res) => {
+      toast.success(res.data.message);
+      setCommentInput("");
+      queryClient.invalidateQueries(["postComments", post._id]);
+    },
+    onError: (err) => {
+      toast.error(err.response.data.message);
+    },
+  });
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const res = await makeRequest().post(
-        `/comments/create?postId=${post._id}`,
-        {
-          content: commentInput,
-        }
-      );
-      fetchAllComments();
-      toast.success(res.data.message);
-      setCommentInput("");
-    } catch (err) {
-      toast.error(err.response.data.message);
-    }
+    submitCommentMutation.mutate();
   };
 
   return (
@@ -125,23 +139,23 @@ const Post = ({ post, getAllPosts }) => {
       <div className="actions-container">
         <div className="likes">
           <div className="like-icon" onClick={handleLikeToggle}>
-            {likes.indexOf(currentUser._id) !== -1 ? (
+            {likes?.indexOf(currentUser._id) !== -1 ? (
               <AiFillHeart style={{ color: "red" }} />
             ) : (
               <AiOutlineHeart />
             )}
           </div>
           <div className="likes-count count">
-            {likes.length}
-            <span>{likes.length <= 1 ? " like" : " likes"}</span>
+            {likes?.length}
+            <span>{likes?.length <= 1 ? " like" : " likes"}</span>
           </div>
         </div>
         <div
           className="comments-count count"
           onClick={() => setShowComments(!showComments)}
         >
-          {comments.length}
-          <span>{comments.length <= 1 ? " comment" : " comments"}</span>
+          {comments?.length}
+          <span>{comments?.length <= 1 ? " comment" : " comments"}</span>
         </div>
       </div>
       <div className="add-comment">
@@ -164,16 +178,16 @@ const Post = ({ post, getAllPosts }) => {
         style={{ display: !showComments ? "none" : "flex" }}
       >
         {showComments &&
-          (comments.length === 0 ? (
+          (comments?.length === 0 ? (
             <p>No comments yet.</p>
           ) : (
             <>
-              {comments.map((comment) => (
+              {comments?.map((comment) => (
                 <Comment
                   key={comment._id}
                   comment={comment}
                   currentUser={currentUser}
-                  fetchAllComments={fetchAllComments}
+                  postId={post._id}
                 />
               ))}
             </>

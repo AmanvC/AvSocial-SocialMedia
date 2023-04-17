@@ -3,12 +3,15 @@ import { makeRequest } from "../../axios";
 import { AuthContext } from "../../context/authContext";
 import "./share.scss";
 import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
-const Share = ({ fetchPosts }) => {
+const Share = () => {
   const [file, setFile] = useState(null);
   const [postInput, setPostInput] = useState("");
 
   const { currentUser } = useContext(AuthContext);
+
+  const queryClient = useQueryClient();
 
   const upload = async () => {
     try {
@@ -38,7 +41,7 @@ const Share = ({ fetchPosts }) => {
       });
       setPostInput("");
       setFile(null);
-      fetchPosts();
+      queryClient.invalidateQueries(["posts"]);
       toast.success("Post Created Successfully.");
     } catch (err) {
       toast.error("Something went wrong while creating a new Post!");

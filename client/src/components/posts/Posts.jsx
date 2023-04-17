@@ -1,50 +1,49 @@
 import "./posts.scss";
 
 import Post from "./post/Post";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { makeRequest } from "../../axios";
 import { AuthContext } from "../../context/authContext";
 import Share from "../share/Share";
 import toast from "react-hot-toast";
 import Loader from "../loader/Loader";
+import { useQuery } from "@tanstack/react-query";
 
 const Posts = () => {
-  const [loading, setLoading] = useState(true);
-  const [posts, setPosts] = useState(null);
-
   const { logout } = useContext(AuthContext);
 
-  useEffect(() => {
-    getAllPosts();
-  }, []);
+  const {
+    isLoading,
+    data: posts,
+    error,
+  } = useQuery({
+    queryKey: ["posts"],
+    queryFn: async () => {
+      const res = await makeRequest().get("/posts");
+      return res.data.data;
+    },
+  });
 
-  const getAllPosts = async () => {
-    try {
-      const posts = await makeRequest().get("/posts");
-      setPosts(posts.data.data);
-      setLoading(false);
-    } catch (err) {
-      if (err.response.data === "Unauthorized") {
-        logout();
-        toast.error("You have been logged out, please login to continue");
-        return;
-      }
-      toast.error("Something went Wrong!");
-      setLoading(false);
+  if (error) {
+    if (error?.response?.data === "Unauthorized") {
+      logout();
+      toast.error("You have been logged out, please login to continue");
+      return;
     }
-  };
+    toast.error("Something went Wrong!");
+  }
 
   return (
     <div className="posts">
-      {loading ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <>
-          <Share fetchPosts={getAllPosts} />
-          {posts?.map((post, index) => (
-            <Post key={index} post={post} getAllPosts={getAllPosts} />
+          <Share />
+          {posts?.map((post) => (
+            <Post key={post._id} post={post} />
           ))}
-          {posts.length === 0 && (
+          {posts?.length === 0 && (
             <div className="no-posts-available">
               <p>Uh huh, it seems you and your friends haven't posted yet!</p>
             </div>
