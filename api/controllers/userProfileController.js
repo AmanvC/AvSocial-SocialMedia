@@ -75,3 +75,39 @@ module.exports.updateUser = async (req, res) => {
     });
   }
 };
+
+module.exports.searchUser = async (req, res) => {
+  try {
+    const searchQuery = req.query.username.split(" ");
+    const result = searchQuery.filter((q) => q !== "");
+    const fname = result[0];
+    const lname = result[1];
+    let users;
+    if (lname) {
+      users = await User.find({
+        $and: [
+          { firstName: { $regex: fname, $options: "i" } },
+          { lastName: { $regex: lname, $options: "i" } },
+        ],
+      }).lean();
+    } else {
+      users = await User.find({
+        firstName: { $regex: fname, $options: "i" },
+      }).lean();
+    }
+    const usersWithoutPassword = users?.map((user) => {
+      const { password, ...otherData } = user;
+      return otherData;
+    });
+    return res.status(200).json({
+      success: true,
+      data: usersWithoutPassword,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error!",
+    });
+  }
+};
