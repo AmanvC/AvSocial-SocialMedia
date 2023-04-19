@@ -9,17 +9,16 @@ import toast from "react-hot-toast";
 import { AiOutlineUser } from "react-icons/ai";
 import { TbSettings } from "react-icons/tb";
 import { MdPersonSearch, MdLogout } from "react-icons/md";
+import { makeRequest } from "../../axios";
 
 const Header = () => {
   const { currentUser, logout } = useContext(AuthContext);
   const [searchInput, setSearchInput] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [showUserOptions, setShowUserOptions] = useState(false);
-
-  useEffect(() => {
-    // todo
-    console.log("Input changed!");
-  }, [searchInput]);
+  const [showResultContainer, setShowResultContainer] = useState(false);
+  const [searchedResult, setSearchedResult] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleLogoutClick = () => {
     logout();
@@ -40,8 +39,23 @@ const Header = () => {
 
   const userOptionRef = useRef(null);
   const searchRef = useRef(null);
+  const resultRef = useRef(null);
   OutsideClick(userOptionRef, setShowUserOptions);
   OutsideClick(searchRef, setShowSearch);
+  OutsideClick(resultRef, setShowResultContainer);
+
+  const handleSearchUser = async () => {
+    if (searchInput.length > 2) {
+      setLoading(true);
+      const res = await makeRequest().get(
+        `/profile/search/user?username=${searchInput}`
+      );
+      setSearchedResult(res.data.data);
+      setLoading(false);
+    } else {
+      setSearchedResult([]);
+    }
+  };
 
   return (
     <div className="header">
@@ -58,9 +72,56 @@ const Header = () => {
             type="text"
             placeholder="Search user..."
             onChange={(e) => setSearchInput(e.target.value)}
+            onKeyUp={handleSearchUser}
             value={searchInput}
+            onClick={() => setShowResultContainer(true)}
           />
-          {showSearch && <span onClick={() => setShowSearch(false)}>✖</span>}
+          {showResultContainer && (
+            <>
+              {searchInput.length > 2 && (
+                <div className="searched-results" ref={resultRef}>
+                  {loading ? (
+                    <div className="loading-wrapper">
+                      <div className="loading"></div>
+                    </div>
+                  ) : searchedResult.length > 0 ? (
+                    <>
+                      {searchedResult.map((result) => (
+                        <div key={result._id}>
+                          <Link
+                            to={`/profile/${result._id}`}
+                            onClick={() => setShowResultContainer(false)}
+                          >
+                            <div className="searched-user-card">
+                              <img
+                                src={
+                                  result.profileImage
+                                    ? `/uploads/${result.profileImage}`
+                                    : NoUserImage
+                                }
+                              />
+                              <p className="name">
+                                {result.firstName + " " + result.lastName}
+                              </p>
+                            </div>
+                          </Link>
+                        </div>
+                      ))}
+                    </>
+                  ) : (
+                    <p style={{ padding: 0, fontWeight: 600 }}>
+                      No user found.
+                    </p>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+          {showSearch && (
+            <span className="close-search" onClick={() => setShowSearch(false)}>
+              ✖
+            </span>
+          )}
         </div>
         <div className="actions">
           <p
