@@ -10,12 +10,12 @@
   background-color: #fff;
 
   .circle {
-    height: 100px;
-    width: 100px;
+    height: 60px;
+    width: 60px;
     border-radius: 50%;
-    border: 15px solid lightgray;
-    border-top: 15px solid gray;
-    animation: animate 5s linear infinite;
+    border: 6px solid gray;
+    border-top: 6px solid #fff;
+    animation: animate 4s linear infinite;
 
     @keyframes animate {
       from {

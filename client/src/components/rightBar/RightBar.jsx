@@ -43,8 +43,6 @@ const RightBar = () => {
     return <Loader />;
   }
 
-  console.log(requests);
-
   return (
     <div className="rightbar">
       <div className="pending-requests-container">
@@ -58,7 +56,9 @@ const RightBar = () => {
                 <div className="user-info">
                   <img
                     src={
-                      "/uploads/" + request?.sentBy?.profileImage || NoUserImage
+                      request?.sentBy?.profileImage
+                        ? `/uploads/${request?.sentBy?.profileImage}`
+                        : NoUserImage
                     }
                     className="user-image"
                   />
