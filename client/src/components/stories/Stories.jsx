@@ -1,26 +1,27 @@
 import "./stories.scss";
 import Story from "./story/Story";
 import { IoMdAddCircle } from "react-icons/io";
-import { useEffect, useState } from "react";
+import { TbFaceIdError } from "react-icons/tb";
+import { useState } from "react";
 import { makeRequest } from "../../axios";
 import toast from "react-hot-toast";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const Stories = () => {
-  const [stories, setStories] = useState([]);
   const [file, setFile] = useState(null);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    fetchStories();
-  }, []);
-
-  const fetchStories = async () => {
-    try {
+  const {
+    isLoading,
+    data: stories,
+    error,
+  } = useQuery({
+    queryKey: ["stories"],
+    queryFn: async () => {
       const res = await makeRequest().get("/stories");
-      setStories(res?.data?.stories);
-    } catch (err) {
-      toast.error(err?.response?.data?.message);
-    }
-  };
+      return res.data.stories;
+    },
+  });
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -44,12 +45,18 @@ const Stories = () => {
         image: imgUrl,
       });
       setFile(null);
-      fetchStories();
+      queryClient.invalidateQueries(["stories"]);
       toast.success("Story Added Successfully.");
     } catch (err) {
       toast.error("Something went wrong, story cannot be added!");
     }
   };
+
+  console.log(error);
+
+  if (error) {
+    toast.error(error.response?.data?.message || "Something went wrong!");
+  }
 
   return (
     <div className="stories">
@@ -83,12 +90,22 @@ const Stories = () => {
           </div>
         </div>
       )}
-      {stories.map((story) => {
-        return (
-          <Story key={story._id} story={story} fetchStories={fetchStories} />
-        );
-      })}
-      {/* <Story /> */}
+      {isLoading ? (
+        <div className="loading-wrapper">
+          <div className="loading"></div>
+        </div>
+      ) : error ? (
+        <div className="error-wrapper">
+          <p className="error-message">
+            <TbFaceIdError />{" "}
+            <span className="text">Something went wrong!</span>
+          </p>
+        </div>
+      ) : (
+        stories.map((story) => {
+          return <Story key={story._id} story={story} />;
+        })
+      )}
     </div>
   );
 };

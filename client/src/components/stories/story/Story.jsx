@@ -6,24 +6,27 @@ import moment from "moment";
 import toast from "react-hot-toast";
 
 import { AuthContext } from "../../../context/authContext";
-import Image from "../../../assets/test.jpeg";
 import { makeRequest } from "../../../axios";
 import { Link } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const Story = ({ story, fetchStories }) => {
+const Story = ({ story }) => {
   const [showStory, setShowStory] = useState(false);
-
   const { currentUser } = useContext(AuthContext);
+  const queryClient = useQueryClient();
 
-  const deleteStory = async () => {
-    try {
-      await makeRequest().delete(`/stories/delete?storyId=${story._id}`);
+  const deleteStoryMutation = useMutation({
+    mutationFn: () => {
+      return makeRequest().delete(`/stories/delete?storyId=${story._id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["stories"]);
       toast.success("Story deleted successfully.");
-      fetchStories();
-    } catch (err) {
-      toast.error(err.response.data.message);
-    }
-  };
+    },
+    onError: (res) => {
+      toast.error(res.response.data.message);
+    },
+  });
 
   return (
     <>
@@ -62,7 +65,10 @@ const Story = ({ story, fetchStories }) => {
             </span>
             <img className="view-story" src={`/uploads/${story.image}`} />
             {currentUser._id === story.user._id && (
-              <button className="delete" onClick={deleteStory}>
+              <button
+                className="delete"
+                onClick={() => deleteStoryMutation.mutate()}
+              >
                 Delete
               </button>
             )}

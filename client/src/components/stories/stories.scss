@@ -121,4 +121,54 @@
       }
     }
   }
+
+  .loading-wrapper {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .loading {
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+      border: 2px solid gray;
+      border-top: 2px solid #fff;
+      animation: rotate 4s linear infinite;
+
+      @keyframes rotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    }
+  }
+
+  .error-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .error-message {
+      font-size: 1.5em;
+      opacity: 0.3;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+
+      @include sm {
+        font-size: 1.1em;
+      }
+
+      .text {
+        margin-bottom: 2px;
+      }
+    }
+  }
 }
