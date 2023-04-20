@@ -14,7 +14,7 @@ const ProfileButton = ({ userProfile, currentUser, updateProfile, userId }) => {
   const queryClient = useQueryClient();
 
   const { isLoading, data: relationship } = useQuery({
-    queryKey: ["userRelationship"],
+    queryKey: ["userRelationship", currentUser._id, userId],
     queryFn: async () => {
       const res = await makeRequest().get(`/relationship/status/${userId}`);
       return res.data.data;
@@ -29,10 +29,13 @@ const ProfileButton = ({ userProfile, currentUser, updateProfile, userId }) => {
     },
     onSuccess: (res) => {
       toast.success(res.data.message);
-      queryClient.invalidateQueries(["userRelationship"], {
-        exact: true,
-      });
-      queryClient.invalidateQueries(["pendingRequests"], {
+      queryClient.invalidateQueries(
+        ["userRelationship", currentUser._id, userId],
+        {
+          exact: true,
+        }
+      );
+      queryClient.invalidateQueries(["pendingRequests", currentUser._id], {
         exact: true,
       });
     },
@@ -49,10 +52,13 @@ const ProfileButton = ({ userProfile, currentUser, updateProfile, userId }) => {
     },
     onSuccess: (res) => {
       toast.success(res.data.message);
-      queryClient.invalidateQueries(["userRelationship"], {
-        exact: true,
-      });
-      queryClient.invalidateQueries(["pendingRequests"], {
+      queryClient.invalidateQueries(
+        ["userRelationship", currentUser._id, userId],
+        {
+          exact: true,
+        }
+      );
+      queryClient.invalidateQueries(["pendingRequests", currentUser._id], {
         exact: true,
       });
     },
@@ -71,10 +77,13 @@ const ProfileButton = ({ userProfile, currentUser, updateProfile, userId }) => {
     },
     onSuccess: (res, variables) => {
       toast.success(variables);
-      queryClient.invalidateQueries(["userRelationship"], {
-        exact: true,
-      });
-      queryClient.invalidateQueries(["pendingRequests"], {
+      queryClient.invalidateQueries(
+        ["userRelationship", currentUser._id, userId],
+        {
+          exact: true,
+        }
+      );
+      queryClient.invalidateQueries(["pendingRequests", currentUser._id], {
         exact: true,
       });
     },
@@ -109,8 +118,6 @@ const ProfileButton = ({ userProfile, currentUser, updateProfile, userId }) => {
 
   const removeFriendRef = useRef(null);
   OutsideClick(removeFriendRef, setShowRemoveFriend);
-
-  console.log(isLoading);
 
   return (
     <>

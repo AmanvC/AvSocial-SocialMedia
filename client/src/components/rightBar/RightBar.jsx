@@ -6,14 +6,18 @@ import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import Loader from "../loader/Loader";
 import NoUserImage from "../../assets/NoUserImage.png";
+import { useContext } from "react";
+import { AuthContext } from "../../context/authContext";
 
 const RightBar = () => {
+  const { currentUser } = useContext(AuthContext);
+
   const {
     isLoading,
     error,
     data: requests,
   } = useQuery({
-    queryKey: ["pendingRequests"],
+    queryKey: ["pendingRequests", currentUser._id],
     queryFn: async () => {
       const res = await makeRequest().get("/relationship/pending");
       return res.data.data;

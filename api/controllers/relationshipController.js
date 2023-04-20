@@ -11,6 +11,7 @@ module.exports.getRelationshipStatus = async (req, res) => {
 
     const relationship = await Relationship.findOne({
       sentBy: { $in: [currentUser._id, otherUserId] },
+      sentTo: { $in: [currentUser._id, otherUserId] },
     });
     // console.log(relationship);
     return res.status(200).json({
