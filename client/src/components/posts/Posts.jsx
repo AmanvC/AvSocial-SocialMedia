@@ -6,18 +6,21 @@ import { makeRequest } from "../../axios";
 import { AuthContext } from "../../context/authContext";
 import Share from "../share/Share";
 import toast from "react-hot-toast";
-import Loader from "../loader/Loader";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const Posts = () => {
   const { logout } = useContext(AuthContext);
+
+  const queryClient = useQueryClient();
+
+  const { currentUser } = useContext(AuthContext);
 
   const {
     isLoading,
     data: posts,
     error,
   } = useQuery({
-    queryKey: ["posts"],
+    queryKey: ["posts for", currentUser._id],
     queryFn: async () => {
       const res = await makeRequest().get("/posts");
       return res.data.data;
@@ -33,13 +36,29 @@ const Posts = () => {
     toast.error("Something went Wrong!");
   }
 
+  const handleRetryFetchingPosts = () => {
+    queryClient.invalidateQueries(["posts for", currentUser._id], {
+      exact: true,
+    });
+  };
+
   return (
     <div className="posts">
+      <Share />
       {isLoading ? (
-        <Loader />
+        <div className="loading-wrapper">
+          <div className="loading"></div>
+        </div>
+      ) : error ? (
+        <div className="retry-container">
+          <p>Click </p>
+          <p className="retry" onClick={handleRetryFetchingPosts}>
+            here
+          </p>
+          <p>to retry.</p>
+        </div>
       ) : (
         <>
-          <Share />
           {posts?.map((post) => (
             <Post key={post._id} post={post} />
           ))}

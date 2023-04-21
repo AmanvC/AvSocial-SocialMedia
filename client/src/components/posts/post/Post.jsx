@@ -50,8 +50,17 @@ const Post = ({ post }) => {
       }
       return makeRequest().post("/posts/like/create", { postId: post._id });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["postLikes", post._id]);
+    onSuccess: (res, val) => {
+      // if (val) {
+      //   queryClient.setQueryData(
+      //     ["postLikes", post._id],
+      //     [...likes, currentUser._id]
+      //   );
+      // } else {
+      //   const remLikes = likes.filter((like) => like != currentUser._id);
+      //   queryClient.setQueryData(["postLikes", post._id], remLikes);
+      // }
+      queryClient.invalidateQueries(["postLikes", post._id], { exact: true });
     },
   });
 
@@ -66,7 +75,9 @@ const Post = ({ post }) => {
     },
     onSuccess: (res) => {
       toast.success(res?.data?.message || "Post deleted successfully.");
-      queryClient.invalidateQueries(["posts"]);
+      queryClient.invalidateQueries(["posts for", currentUser._id], {
+        exact: true,
+      });
     },
     onError: (err) => {
       toast.error(err.response.data.message);
@@ -86,7 +97,9 @@ const Post = ({ post }) => {
     onSuccess: (res) => {
       toast.success(res.data.message);
       setCommentInput("");
-      queryClient.invalidateQueries(["postComments", post._id]);
+      queryClient.invalidateQueries(["postComments", post._id], {
+        exact: true,
+      });
     },
     onError: (err) => {
       toast.error(err.response.data.message);
@@ -111,14 +124,18 @@ const Post = ({ post }) => {
             }
             alt=""
           />
-          <div className="details">
-            <p className="name">
-              <Link to={`/profile/${post.user._id}`}>
-                {post.user.firstName + " " + post.user.lastName}
-              </Link>
-            </p>
-            <p className="time">{moment(post.createdAt).fromNow()}</p>
-          </div>
+          {commentsLoading ? (
+            <p>loading...</p>
+          ) : (
+            <div className="details">
+              <p className="name">
+                <Link to={`/profile/${post.user._id}`}>
+                  {post.user.firstName + " " + post.user.lastName}
+                </Link>
+              </p>
+              <p className="time">{moment(post.createdAt).fromNow()}</p>
+            </div>
+          )}
         </div>
         {currentUser._id === post.user._id && (
           <MdDeleteForever className="delete-icon" onClick={deletePost} />
@@ -137,26 +154,34 @@ const Post = ({ post }) => {
         )}
       </div>
       <div className="actions-container">
-        <div className="likes">
-          <div className="like-icon" onClick={handleLikeToggle}>
-            {likes?.indexOf(currentUser._id) !== -1 ? (
-              <AiFillHeart style={{ color: "red" }} />
-            ) : (
-              <AiOutlineHeart />
-            )}
+        {likesLoading ? (
+          <p>loading...</p>
+        ) : (
+          <div className="likes">
+            <div className="like-icon" onClick={handleLikeToggle}>
+              {likes?.indexOf(currentUser._id) !== -1 ? (
+                <AiFillHeart style={{ color: "red" }} />
+              ) : (
+                <AiOutlineHeart />
+              )}
+            </div>
+            <div className="likes-count count">
+              {likes?.length}
+              <span>{likes?.length <= 1 ? " like" : " likes"}</span>
+            </div>
           </div>
-          <div className="likes-count count">
-            {likes?.length}
-            <span>{likes?.length <= 1 ? " like" : " likes"}</span>
+        )}
+        {commentsLoading ? (
+          <p>loading...</p>
+        ) : (
+          <div
+            className="comments-count count"
+            onClick={() => setShowComments(!showComments)}
+          >
+            {comments?.length}
+            <span>{comments?.length <= 1 ? " comment" : " comments"}</span>
           </div>
-        </div>
-        <div
-          className="comments-count count"
-          onClick={() => setShowComments(!showComments)}
-        >
-          {comments?.length}
-          <span>{comments?.length <= 1 ? " comment" : " comments"}</span>
-        </div>
+        )}
       </div>
       <div className="add-comment">
         <form onSubmit={handleCommentSubmit}>

@@ -38,7 +38,9 @@ const Comment = ({ comment, currentUser, postId }) => {
       );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["commentLikes", comment._id]);
+      queryClient.invalidateQueries(["commentLikes", comment._id], {
+        exact: true,
+      });
     },
     onError: (err) => {
       toast.error(err.response.data.message);
@@ -56,7 +58,7 @@ const Comment = ({ comment, currentUser, postId }) => {
     },
     onSuccess: () => {
       toast.success("Comment deleted successfully.");
-      queryClient.invalidateQueries(["postComments", postId]);
+      queryClient.invalidateQueries(["postComments", postId], { exact: true });
     },
     onError: (err) => {
       toast.error(err.response.data.message);

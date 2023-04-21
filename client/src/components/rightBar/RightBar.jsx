@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 
 import { makeRequest } from "../../axios";
-import Loader from "../loader/Loader";
 import NoUserImage from "../../assets/NoUserImage.png";
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
@@ -13,8 +12,8 @@ const RightBar = () => {
   const { currentUser } = useContext(AuthContext);
 
   const {
-    isLoading,
-    error,
+    isLoading: pendingRequestsLoading,
+    error: pendingRequestsError,
     data: requests,
   } = useQuery({
     queryKey: ["pendingRequests", currentUser._id],
@@ -23,6 +22,10 @@ const RightBar = () => {
       return res.data.data;
     },
   });
+
+  if (pendingRequestsError) {
+    toast.error("Could not fetch pending requests, something went Wrong!");
+  }
 
   const queryClient = useQueryClient();
 
@@ -43,16 +46,24 @@ const RightBar = () => {
     }
   );
 
-  if (isLoading) {
-    return <Loader />;
-  }
+  const handleRetryFetchingPendingRequests = () => {
+    queryClient.invalidateQueries(["pendingRequests", currentUser._id]);
+  };
 
   return (
     <div className="rightbar">
       <div className="pending-requests-container">
         <h3>Pending Requests</h3>
         <div className="pending-requests">
-          {requests?.length === 0 ? (
+          {pendingRequestsLoading ? (
+            <div className="loading-wrapper">
+              <div className="loading"></div>
+            </div>
+          ) : pendingRequestsError ? (
+            <div className="error-container">
+              <p onClick={handleRetryFetchingPendingRequests}>Retry?</p>
+            </div>
+          ) : requests?.length === 0 ? (
             <p style={{ textAlign: "center" }}>No pending requests.</p>
           ) : (
             requests?.map((request) => (

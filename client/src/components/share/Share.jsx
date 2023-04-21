@@ -41,7 +41,7 @@ const Share = () => {
       });
       setPostInput("");
       setFile(null);
-      queryClient.invalidateQueries(["posts"]);
+      queryClient.invalidateQueries(["posts for", currentUser._id]);
       toast.success("Post Created Successfully.");
     } catch (err) {
       toast.error("Something went wrong while creating a new Post!");
