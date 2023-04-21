@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
+const Relationship = require("../models/Relationship");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const path = require("path");
@@ -16,15 +17,47 @@ module.exports.getUserDetails = async (req, res) => {
     }
     const { password, ...otherData } = user;
 
-    const userPosts = await Post.find({ user: userId }).populate(
-      "user",
-      "_id firstName lastName profileImage"
-    );
-
     return res.status(200).json({
       success: true,
       userDetails: otherData,
-      userPosts: userPosts,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error!",
+    });
+  }
+};
+
+module.exports.getUserPosts = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const token = req.headers.authorization.split(" ")[1];
+    const currentUser = jwt.verify(token, "secretkey");
+
+    const relationship = await Relationship.findOne({
+      sentBy: { $in: [currentUser._id, userId] },
+      sentTo: { $in: [currentUser._id, userId] },
+      status: "Accepted",
+    });
+
+    if (relationship || currentUser._id === userId) {
+      const userPosts = await Post.find({ user: userId }).populate(
+        "user",
+        "_id firstName lastName profileImage"
+      );
+
+      return res.status(200).json({
+        success: true,
+        userPosts: userPosts,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      userPosts: null,
     });
   } catch (err) {
     console.log(err);
@@ -62,10 +95,15 @@ module.exports.updateUser = async (req, res) => {
         path.join(__dirname, `../../client/public/uploads/${user.coverImage}`)
       );
     }
-    await User.findByIdAndUpdate(req.body.userId, req.body);
+    const { password, ...updatedData } = await User.findByIdAndUpdate(
+      req.body.userId,
+      req.body
+    ).lean();
+    console.log(updatedData);
     return res.status(200).json({
       success: true,
       message: "Profile updated successfully.",
+      token: jwt.sign(updatedData, "secretkey"),
     });
   } catch (err) {
     console.log(err);
