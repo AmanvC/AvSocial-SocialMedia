@@ -11,13 +11,12 @@ import NoUserImage from "../../assets/NoUserImage.png";
 import NoCoverImage from "../../assets/NoCoverImage.jpg";
 import Post from "../../components/posts/post/Post";
 import ProfileButton from "../../components/profileButton/ProfileButton";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const Profile = () => {
   const userId = useLocation().pathname.split("/")[2];
 
   const { currentUser, logout } = useContext(AuthContext);
-  const [userProfile, setUserProfile] = useState({});
-  const [userPosts, setUserPosts] = useState({});
   const [loading, setLoading] = useState(true);
   const [invalidUser, setInvalidUser] = useState(false);
   const [update, setUpdate] = useState(false);
@@ -26,32 +25,45 @@ const Profile = () => {
   const [uploadedProfileImage, setUploadedProfileImage] = useState(null);
   const [uploadedCoverImage, setUploadedCoverImage] = useState(null);
 
-  useEffect(() => {
-    getProfileInfo();
-  }, [userId]);
+  const queryClient = useQueryClient();
 
-  const getProfileInfo = async () => {
-    try {
-      setLoading(true);
+  const {
+    isLoading: profileLoading,
+    data: userProfile,
+    error: profileError,
+  } = useQuery({
+    queryKey: ["profile", userId],
+    queryFn: async () => {
       const res = await makeRequest().get(`/profile/${userId}`);
-      setUserProfile(res.data.userDetails);
-      setUserPosts(res.data.userPosts);
-      setLoading(false);
-    } catch (err) {
-      setLoading(false);
-      if (err.response.status === 404) {
-        setInvalidUser(true);
-        toast.error(err.response.data.message);
-        return;
-      }
-      if (err.response.data === "Unauthorized") {
-        logout();
-        toast.error("You have been logged out, please login to continue");
-        return;
-      }
-      toast.error(err.response.data.message || "Something went Wrong!");
-    }
-  };
+      return res.data.userDetails;
+    },
+  });
+
+  const {
+    isLoading: relationshipLoading,
+    data: relationship,
+    error: relationshipError,
+  } = useQuery({
+    queryKey: ["userRelationship", currentUser._id, userId],
+    queryFn: async () => {
+      const res = await makeRequest().get(`/relationship/status/${userId}`);
+      return res.data.data;
+    },
+  });
+
+  const {
+    isLoading: postsLoading,
+    data: userPosts,
+    error: postsError,
+  } = useQuery({
+    enabled: relationship != null || currentUser._id === userId,
+    queryKey: ["posts", userId],
+    queryFn: async () => {
+      const res = await makeRequest().get(`/profile/${userId}/posts`);
+      console.log(res);
+      return res.data.userPosts;
+    },
+  });
 
   const handleInputChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -107,7 +119,7 @@ const Profile = () => {
       });
       setLoading(false);
       setUpdate(false);
-      getProfileInfo();
+      queryClient.invalidateQueries(["profile", userId]);
       toast.success(res.data.message);
     } catch (err) {
       setLoading(false);
@@ -135,7 +147,7 @@ const Profile = () => {
     setUploadedCoverImage(e.target.files[0]);
   };
 
-  if (loading) {
+  if (profileLoading) {
     return <Loader />;
   }
 
@@ -176,14 +188,21 @@ const Profile = () => {
               currentUser={currentUser}
               updateProfile={updateProfile}
               userId={userId}
+              relationship={relationship}
             />
           </div>
         </div>
-        <div className="posts" style={{ margin: 10 }}>
-          {userPosts?.map((post) => (
-            <Post key={post._id} post={post} getAllPosts={getProfileInfo} />
-          ))}
-        </div>
+        {userPosts ? (
+          <div className="posts" style={{ margin: 10 }}>
+            {userPosts?.map((post) => (
+              <Post key={post._id} post={post} />
+            ))}
+          </div>
+        ) : (
+          <h2 style={{ textAlign: "center", opacity: 0.2, marginTop: 50 }}>
+            This profile is hidden!
+          </h2>
+        )}
       </div>
       {update && (
         <div className="update-wrapper">
@@ -279,7 +298,19 @@ const Profile = () => {
                   />
                 </div>
               </div>
-              <button onClick={handleUpdateProfile}>Update</button>
+              {loading ? (
+                <button
+                  style={{
+                    opacity: 0.5,
+                    cursor: "not-allowed",
+                    transform: "scale(1)",
+                  }}
+                >
+                  loading...
+                </button>
+              ) : (
+                <button onClick={handleUpdateProfile}>Update</button>
+              )}
             </form>
           </div>
         </div>

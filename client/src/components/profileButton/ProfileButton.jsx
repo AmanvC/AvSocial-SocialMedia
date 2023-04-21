@@ -3,23 +3,21 @@ import toast from "react-hot-toast";
 import { GoCheck } from "react-icons/go";
 import { AiFillCaretDown } from "react-icons/ai";
 import { HiUserRemove } from "react-icons/hi";
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 import "./profileButton.scss";
 import { makeRequest } from "../../axios";
 
-const ProfileButton = ({ userProfile, currentUser, updateProfile, userId }) => {
+const ProfileButton = ({
+  userProfile,
+  currentUser,
+  updateProfile,
+  userId,
+  relationship,
+}) => {
   const [showRemoveFriend, setShowRemoveFriend] = useState(false);
 
   const queryClient = useQueryClient();
-
-  const { isLoading, data: relationship } = useQuery({
-    queryKey: ["userRelationship", currentUser._id, userId],
-    queryFn: async () => {
-      const res = await makeRequest().get(`/relationship/status/${userId}`);
-      return res.data.data;
-    },
-  });
 
   const acceptRequestMutation = useMutation({
     mutationFn: () => {
@@ -40,7 +38,7 @@ const ProfileButton = ({ userProfile, currentUser, updateProfile, userId }) => {
       });
     },
     onError: (res) => {
-      toast.error(res.response.data.message);
+      toast.error(res.response.data.message || "Something went wrong!");
     },
   });
 
@@ -63,7 +61,7 @@ const ProfileButton = ({ userProfile, currentUser, updateProfile, userId }) => {
       });
     },
     onError: (res) => {
-      toast.error(res.response.data.message);
+      toast.error(res.response.data.message || "Something went wrong!");
     },
   });
 
@@ -86,9 +84,10 @@ const ProfileButton = ({ userProfile, currentUser, updateProfile, userId }) => {
       queryClient.invalidateQueries(["pendingRequests", currentUser._id], {
         exact: true,
       });
+      queryClient.invalidateQueries(["posts", userId], { exact: true });
     },
     onError: (res) => {
-      toast.error(res.response.data.message);
+      toast.error(res.response.data.message || "Something went wrong!");
     },
   });
 
@@ -120,70 +119,95 @@ const ProfileButton = ({ userProfile, currentUser, updateProfile, userId }) => {
   OutsideClick(removeFriendRef, setShowRemoveFriend);
 
   return (
-    <>
-      {isLoading ? (
-        <button
-          style={{ transform: "scale(1)", opacity: 0.6, cursor: "not-allowed" }}
-        >
-          loading...
-        </button>
-      ) : (
-        <div className="profile-button">
-          {userProfile._id === currentUser._id ? (
-            <button onClick={updateProfile}>Update Profile</button>
-          ) : !relationship ? (
-            <button onClick={handleAddFriend}>Add Friend</button>
-          ) : relationship.status === "Accepted" ? (
+    <div className="profile-button">
+      {userProfile._id === currentUser._id ? (
+        <button onClick={updateProfile}>Update Profile</button>
+      ) : !relationship ? (
+        addFriendMutation.isLoading ? (
+          <button
+            style={{
+              opacity: 0.5,
+              cursor: "not-allowed",
+              transform: "scale(1)",
+            }}
+          >
+            loading...
+          </button>
+        ) : (
+          <button onClick={handleAddFriend}>Add Friend</button>
+        )
+      ) : relationship.status === "Accepted" ? (
+        deleteRequestMutation.isLoading ? (
+          <button
+            style={{
+              opacity: 0.5,
+              cursor: "not-allowed",
+              transform: "scale(1)",
+            }}
+          >
+            loading...
+          </button>
+        ) : (
+          <button
+            onClick={() => setShowRemoveFriend(true)}
+            style={{ display: "flex", alignItems: "center", gap: 5 }}
+          >
+            <GoCheck /> Friend <AiFillCaretDown />
+          </button>
+        )
+      ) : relationship.sentBy === currentUser._id ? (
+        <div style={{ display: "flex", gap: 10 }}>
+          <button style={{ cursor: "not-allowed", transform: "scale(1)" }}>
+            Pending
+          </button>
+          {deleteRequestMutation.isLoading ? (
             <button
-              onClick={() => setShowRemoveFriend(true)}
-              style={{ display: "flex", alignItems: "center", gap: 5 }}
-            >
-              <GoCheck /> Friend <AiFillCaretDown />
-            </button>
-          ) : relationship.sentBy === currentUser._id ? (
-            <div style={{ display: "flex", gap: 10 }}>
-              <button style={{ cursor: "not-allowed", transform: "scale(1)" }}>
-                Pending
-              </button>
-              <button
-                style={{ backgroundColor: "gray" }}
-                onClick={() =>
-                  handleDeleteRequest("Request deleted successfully.")
-                }
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: "flex", gap: 10 }}>
-              <button onClick={handleAcceptRequest}>Accept Request</button>
-              <button
-                style={{ backgroundColor: "gray" }}
-                onClick={() =>
-                  handleDeleteRequest("Request deleted successfully.")
-                }
-              >
-                Delete
-              </button>
-            </div>
-          )}
-          {showRemoveFriend && (
-            <div
-              onClick={() => {
-                handleDeleteRequest("User friendship removed.");
-                setShowRemoveFriend(false);
+              style={{
+                opacity: 0.5,
+                cursor: "not-allowed",
+                transform: "scale(1)",
+                backgroundColor: "gray",
               }}
-              ref={removeFriendRef}
-              className="friend-options"
             >
-              <p>
-                <HiUserRemove /> Unfriend
-              </p>
-            </div>
+              loading...
+            </button>
+          ) : (
+            <button
+              style={{ backgroundColor: "gray" }}
+              onClick={() =>
+                handleDeleteRequest("Request deleted successfully.")
+              }
+            >
+              Cancel
+            </button>
           )}
         </div>
+      ) : (
+        <div style={{ display: "flex", gap: 10 }}>
+          <button onClick={handleAcceptRequest}>Accept Request</button>
+          <button
+            style={{ backgroundColor: "gray" }}
+            onClick={() => handleDeleteRequest("Request deleted successfully.")}
+          >
+            Delete
+          </button>
+        </div>
       )}
-    </>
+      {showRemoveFriend && (
+        <div
+          onClick={() => {
+            handleDeleteRequest("User friendship removed.");
+            setShowRemoveFriend(false);
+          }}
+          ref={removeFriendRef}
+          className="friend-options"
+        >
+          <p>
+            <HiUserRemove /> Unfriend
+          </p>
+        </div>
+      )}
+    </div>
   );
 };
 
