@@ -10,7 +10,7 @@ import jwt from "jwt-decode";
 
 import toast from "react-hot-toast";
 
-export const AuthContext = createContext();
+export const AuthContext = createContext(null);
 
 export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -43,9 +43,18 @@ export const AuthContextProvider = ({ children }) => {
     removeItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
   };
 
+  const updateCurrentUser = (token) => {
+    setItemInLocalStorage(LOCALSTORAGE_TOKEN_KEY, token);
+    setCurrentUser(jwt(token));
+  };
+
   return (
-    <AuthContext.Provider value={{ currentUser, login, logout, loading }}>
+    <AuthContext.Provider
+      value={{ currentUser, login, logout, updateCurrentUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
+
+export default AuthContextProvider;

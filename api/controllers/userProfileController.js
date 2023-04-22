@@ -95,11 +95,11 @@ module.exports.updateUser = async (req, res) => {
         path.join(__dirname, `../../client/public/uploads/${user.coverImage}`)
       );
     }
-    const { password, ...updatedData } = await User.findByIdAndUpdate(
-      req.body.userId,
-      req.body
+    await User.findByIdAndUpdate(req.body.userId, req.body);
+
+    const { password, ...updatedData } = await User.findById(
+      req.body.userId
     ).lean();
-    console.log(updatedData);
     return res.status(200).json({
       success: true,
       message: "Profile updated successfully.",

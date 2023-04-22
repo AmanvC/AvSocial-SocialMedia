@@ -16,9 +16,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 const Profile = () => {
   const userId = useLocation().pathname.split("/")[2];
 
-  const { currentUser, logout } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
-  const [invalidUser, setInvalidUser] = useState(false);
+  const { currentUser, updateCurrentUser } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  // const [invalidUser, setInvalidUser] = useState(false);
   const [update, setUpdate] = useState(false);
   const [inputs, setInputs] = useState({});
 
@@ -60,7 +60,6 @@ const Profile = () => {
     queryKey: ["posts", userId],
     queryFn: async () => {
       const res = await makeRequest().get(`/profile/${userId}/posts`);
-      console.log(res);
       return res.data.userPosts;
     },
   });
@@ -119,6 +118,7 @@ const Profile = () => {
       });
       setLoading(false);
       setUpdate(false);
+      updateCurrentUser(res.data.token);
       queryClient.invalidateQueries(["profile", userId]);
       toast.success(res.data.message);
     } catch (err) {
@@ -151,9 +151,9 @@ const Profile = () => {
     return <Loader />;
   }
 
-  if (invalidUser) {
-    return <>Invalid user ID</>;
-  }
+  // if (invalidUser) {
+  //   return <>Invalid user ID</>;
+  // }
 
   return (
     <>
