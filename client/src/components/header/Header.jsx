@@ -109,7 +109,7 @@ const Header = () => {
                       ))}
                     </>
                   ) : (
-                    <p style={{ padding: 0, fontWeight: 600 }}>
+                    <p style={{ padding: "15px 10px", fontWeight: 600 }}>
                       No user found.
                     </p>
                   )}
