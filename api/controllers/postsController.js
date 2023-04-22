@@ -2,20 +2,68 @@ const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const Like = require("../models/Like");
 const User = require("../models/User");
+const Relationship = require("../models/Relationship");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const path = require("path");
 
 module.exports.getPosts = async (req, res) => {
   try {
-    const posts = await Post.find({})
-      .sort("-createdAt")
-      .lean()
-      .populate("user", "_id firstName lastName email profileImage");
+    const token = req.headers.authorization.split(" ")[1];
+    const user = jwt.verify(token, "secretkey");
+
+    // Get all relationships that are sent by current user
+    const relationshipsSent = await Relationship.find({
+      sentBy: user._id,
+      status: "Accepted",
+    });
+
+    // Get all relationships that are received by current user
+    const relationshipsReceived = await Relationship.find({
+      sentTo: user._id,
+      status: "Accepted",
+    });
+
+    // map through all relationships and get ids of users
+    const sentIds = relationshipsSent.map((rel) => rel.sentTo);
+    const receivedIds = relationshipsReceived.map((rel) => rel.sentBy);
+
+    let allPosts = [];
+
+    // get posts made by users to which the current user has sent relationship request
+    for (const id of sentIds) {
+      const sentUserPosts = await Post.find({ user: id }).populate(
+        "user",
+        "_id firstName lastName profileImage"
+      );
+      allPosts.push(...sentUserPosts);
+    }
+
+    // get posts made by users from which the current user has received relationship request
+    for (const id of receivedIds) {
+      const receivedUserPosts = await Post.find({ user: id }).populate(
+        "user",
+        "_id firstName lastName profileImage"
+      );
+      allPosts.push(...receivedUserPosts);
+    }
+
+    // get all posts made by current user
+    const currentUserPosts = await Post.find({ user: user._id }).populate(
+      "user",
+      "_id firstName lastName profileImage"
+    );
+    allPosts.push(...currentUserPosts);
+
+    // sort all posts according to createdAt field
+    allPosts.sort((a, b) => {
+      return b.createdAt - a.createdAt;
+    });
+
     return res.status(200).json({
       success: true,
       message: "posts sent",
-      data: posts,
+      data: allPosts,
     });
   } catch (err) {
     console.log(err);
