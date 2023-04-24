@@ -1,17 +1,14 @@
 import { useContext, useState } from "react";
-import { makeRequest } from "../../axios";
-import { AuthContext } from "../../context/authContext";
+import { makeRequest } from "../../../axios";
+import { AuthContext } from "../../../context/authContext";
 import "./share.scss";
 import toast from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
 
-const Share = () => {
+const Share = ({ setTimestamp, updatePostsList }) => {
   const [file, setFile] = useState(null);
   const [postInput, setPostInput] = useState("");
 
   const { currentUser } = useContext(AuthContext);
-
-  const queryClient = useQueryClient();
 
   const upload = async () => {
     try {
@@ -41,8 +38,8 @@ const Share = () => {
       });
       setPostInput("");
       setFile(null);
-      queryClient.invalidateQueries(["posts for", currentUser._id]);
-      toast.success("Post Created Successfully.");
+      setTimestamp(null);
+      updatePostsList();
     } catch (err) {
       toast.error("Something went wrong while creating a new Post!");
     }
