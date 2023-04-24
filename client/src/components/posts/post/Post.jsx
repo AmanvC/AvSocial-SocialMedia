@@ -50,16 +50,7 @@ const Post = ({ post }) => {
       }
       return makeRequest().post("/posts/like/create", { postId: post._id });
     },
-    onSuccess: (res, val) => {
-      // if (val) {
-      //   queryClient.setQueryData(
-      //     ["postLikes", post._id],
-      //     [...likes, currentUser._id]
-      //   );
-      // } else {
-      //   const remLikes = likes.filter((like) => like != currentUser._id);
-      //   queryClient.setQueryData(["postLikes", post._id], remLikes);
-      // }
+    onSuccess: () => {
       queryClient.invalidateQueries(["postLikes", post._id], { exact: true });
     },
   });
@@ -75,9 +66,7 @@ const Post = ({ post }) => {
     },
     onSuccess: (res) => {
       toast.success(res?.data?.message || "Post deleted successfully.");
-      queryClient.invalidateQueries(["posts for", currentUser._id], {
-        exact: true,
-      });
+      queryClient.invalidateQueries(["posts", "infinite", currentUser._id]);
     },
     onError: (err) => {
       toast.error(err.response.data.message);
