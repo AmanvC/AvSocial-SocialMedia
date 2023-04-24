@@ -1,7 +1,6 @@
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const Like = require("../models/Like");
-const User = require("../models/User");
 const Relationship = require("../models/Relationship");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
@@ -11,6 +10,8 @@ module.exports.getPosts = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
     const user = jwt.verify(token, "secretkey");
+
+    const { page, timestamp } = req.query;
 
     // Get all relationships that are sent by current user
     const relationshipsSent = await Relationship.find({
@@ -28,42 +29,35 @@ module.exports.getPosts = async (req, res) => {
     const sentIds = relationshipsSent.map((rel) => rel.sentTo);
     const receivedIds = relationshipsReceived.map((rel) => rel.sentBy);
 
-    let allPosts = [];
+    // get all posts
+    const query = timestamp
+      ? {
+          user: { $in: [...sentIds, ...receivedIds, user._id] },
+          createdAt: { $lte: new Date(timestamp) },
+        }
+      : { user: { $in: [...sentIds, ...receivedIds, user._id] } };
 
-    // get posts made by users to which the current user has sent relationship request
-    for (const id of sentIds) {
-      const sentUserPosts = await Post.find({ user: id }).populate(
-        "user",
-        "_id firstName lastName profileImage"
-      );
-      allPosts.push(...sentUserPosts);
+    const allPosts = await Post.find(query)
+      .sort("-createdAt")
+      .skip((parseInt(page) - 1) * 10)
+      .limit(10)
+      .populate("user", "_id firstName lastName profileImage");
+
+    let nextPage = false;
+    const nextPosts = await Post.find(query).skip(page * 10);
+    if (nextPosts.length > 0) {
+      nextPage = true;
     }
 
-    // get posts made by users from which the current user has received relationship request
-    for (const id of receivedIds) {
-      const receivedUserPosts = await Post.find({ user: id }).populate(
-        "user",
-        "_id firstName lastName profileImage"
-      );
-      allPosts.push(...receivedUserPosts);
-    }
-
-    // get all posts made by current user
-    const currentUserPosts = await Post.find({ user: user._id }).populate(
-      "user",
-      "_id firstName lastName profileImage"
-    );
-    allPosts.push(...currentUserPosts);
-
-    // sort all posts according to createdAt field
-    allPosts.sort((a, b) => {
-      return b.createdAt - a.createdAt;
-    });
+    console.log(allPosts);
 
     return res.status(200).json({
       success: true,
-      message: "posts sent",
       data: allPosts,
+      nextPage: nextPage ? parseInt(page) + 1 : null,
+      // prevPage: page === 1 ? false : true,
+      timestamp: allPosts[0]?.createdAt,
+      // allposts[0] because we are skipping 10 in each call, so if we checked with the last object that was created, then in the next iteration, the first 10 posts that were created after that post will get skipped
     });
   } catch (err) {
     console.log(err);
