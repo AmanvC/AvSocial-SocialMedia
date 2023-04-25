@@ -12,7 +12,7 @@ module.exports.createSession = async (req, res) => {
         message: "User not found!",
       });
     }
-    const checkPassword = bcrypt.compareSync(data.password, user.password);
+    const checkPassword = await bcrypt.compare(data.password, user.password);
     if (!checkPassword) {
       return res.status(400).json({
         success: false,
