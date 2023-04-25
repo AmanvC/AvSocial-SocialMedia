@@ -9,7 +9,11 @@ import toast from "react-hot-toast";
 import { AiOutlineUser } from "react-icons/ai";
 import { TbSettings } from "react-icons/tb";
 import { MdPersonSearch, MdLogout } from "react-icons/md";
+import { FaUserFriends } from "react-icons/fa";
+import { BiLinkExternal } from "react-icons/bi";
+import { RiContactsBook2Fill } from "react-icons/ri";
 import { makeRequest } from "../../axios";
+import PendingRequests from "../pendingRequests/PendingRequests";
 
 const Header = () => {
   const { currentUser, logout } = useContext(AuthContext);
@@ -18,6 +22,7 @@ const Header = () => {
   const [showUserOptions, setShowUserOptions] = useState(false);
   const [showResultContainer, setShowResultContainer] = useState(false);
   const [searchedResult, setSearchedResult] = useState([]);
+  const [showFriendRequests, setShowFriendRequests] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleLogoutClick = () => {
@@ -40,11 +45,14 @@ const Header = () => {
   const userOptionRef = useRef(null);
   const searchRef = useRef(null);
   const resultRef = useRef(null);
+  const friendRequestsRef = useRef(null);
   OutsideClick(userOptionRef, setShowUserOptions);
   OutsideClick(searchRef, setShowSearch);
   OutsideClick(resultRef, setShowResultContainer);
+  OutsideClick(friendRequestsRef, setShowFriendRequests);
 
-  const handleSearchUser = async () => {
+  const handleSearchUser = async (e) => {
+    console.log(e.target.value);
     if (searchInput.length > 2) {
       setLoading(true);
       const res = await makeRequest().get(
@@ -130,6 +138,14 @@ const Header = () => {
           >
             <MdPersonSearch />
           </p>
+          <div className="friend-request-small-screen">
+            <FaUserFriends onClick={() => setShowFriendRequests(true)} />
+            {showFriendRequests && (
+              <div className="friends-container" ref={friendRequestsRef}>
+                <PendingRequests />
+              </div>
+            )}
+          </div>
           <div className="user-details">
             <img
               src={
@@ -155,6 +171,22 @@ const Header = () => {
                   </li>
                   <li onClick={handleLogoutClick}>
                     <MdLogout /> <span>Logout</span>
+                  </li>
+                  <li>
+                    <Link
+                      target="_blank"
+                      to={"https://imovies-react.netlify.app/"}
+                    >
+                      <BiLinkExternal /> Explore Movies
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      target="_blank"
+                      to={"https://rcl-contacts-list.netlify.app/"}
+                    >
+                      <RiContactsBook2Fill /> Manage Contacts
+                    </Link>
                   </li>
                 </ul>
               </div>

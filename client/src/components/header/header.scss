@@ -168,9 +168,10 @@
     .actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 15px;
 
-      .search-small-screen {
+      .search-small-screen,
+      .friend-request-small-screen {
         display: none;
         cursor: pointer;
         user-select: none;
@@ -179,6 +180,12 @@
         @include sm {
           display: block;
           font-size: 2em;
+        }
+      }
+
+      .friend-request-small-screen {
+        .friends-container {
+          position: relative;
         }
       }
 
