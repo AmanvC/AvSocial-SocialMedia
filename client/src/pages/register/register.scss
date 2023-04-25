@@ -7,7 +7,7 @@
 
   box-sizing: border-box;
   margin: 0;
-  background-image: url("../../assets/login.jpeg");
+  background-image: url("../../assets/login.jpg");
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -25,7 +25,7 @@
     height: 500px;
     width: 600px;
     background-color: rgb(255, 255, 255);
-    border-radius: 4px;
+    border-radius: 10px;
     padding: 20px;
 
     @include md {
@@ -33,7 +33,6 @@
       height: fit-content;
       overflow: scroll;
       margin: 20px 10px;
-      opacity: 0.9;
     }
 
     @include sm {
@@ -41,7 +40,6 @@
       height: fit-content;
       overflow: scroll;
       margin: 20px 10px;
-      opacity: 0.9;
     }
 
     #header {
@@ -97,6 +95,26 @@
             width: 100%;
           }
 
+          .password-valid-info {
+            position: relative;
+            color: lightgray;
+            cursor: pointer;
+
+            small {
+              position: absolute;
+              background-color: #fff;
+              color: gray;
+              padding: 10px;
+              border-radius: 5px;
+              box-shadow: 0 0 5px gray;
+              width: 150px;
+              bottom: 60%;
+              left: 120%;
+              overflow: hidden;
+              font-size: 10px;
+            }
+          }
+
           .show-password {
             position: "absolute";
             top: 110%;
@@ -129,7 +147,7 @@
               opacity: 0.4;
             }
 
-            &:hover {
+            &:focus {
               border: 1px solid rgba(0, 0, 255, 0.479);
             }
           }
@@ -167,6 +185,7 @@
           letter-spacing: 1px;
           cursor: not-allowed;
           opacity: 0.5;
+          transform: scale(1);
         }
       }
     }

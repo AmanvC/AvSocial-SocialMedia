@@ -5,6 +5,10 @@ import { AuthContext } from "../../context/authContext";
 import toast from "react-hot-toast";
 import "./register.scss";
 
+import { BiInfoCircle } from "react-icons/bi";
+
+import validator from "validator";
+
 const Register = () => {
   const [inputs, setInputs] = useState({
     firstName: "",
@@ -16,6 +20,8 @@ const Register = () => {
   });
   const [valid, setValid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
+  const [passwordValid, setPasswordValid] = useState(true);
 
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -34,7 +40,16 @@ const Register = () => {
   };
 
   const changeInputs = (e) => {
-    setInputs({ ...inputs, [e.target.name]: e.target.value });
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const validatePassword = (e) => {
+    const passwordValidity = validator.isStrongPassword(e.target.value);
+    setPasswordValid(passwordValidity);
+    setInputs((prev) => ({ ...prev, password: e.target.value }));
+    if (e.target.value == "") {
+      setPasswordValid(true);
+    }
   };
 
   if (
@@ -129,15 +144,44 @@ const Register = () => {
               )}
             </div>
             <div className="input">
-              <p>Password</p>
+              <p>
+                Password&nbsp;
+                <span className="password-valid-info">
+                  <BiInfoCircle
+                    onMouseEnter={() => setShowInfo(true)}
+                    onMouseLeave={() => setShowInfo(false)}
+                  />
+                  {showInfo && (
+                    <small>
+                      Atleast 1 uppercase, 1 lowercase, 1 special symbol, 1
+                      number, and minimum 8 characters long.
+                    </small>
+                  )}
+                </span>
+              </p>
               <input
                 type={!showPassword ? "password" : "text"}
                 name="password"
                 placeholder="Set Your Password"
-                onChange={changeInputs}
+                onChange={validatePassword}
                 value={inputs.password}
                 required
               />
+              {!passwordValid && (
+                <span
+                  style={{
+                    color: "red",
+                    fontSize: 14,
+                    position: "absolute",
+                    left: 0,
+                    top: "100%",
+                    opacity: 0.7,
+                  }}
+                >
+                  {" "}
+                  Password should match the criteria
+                </span>
+              )}
               <span
                 className="show-password"
                 onClick={() => setShowPassword(!showPassword)}
@@ -156,21 +200,22 @@ const Register = () => {
                 value={inputs.passwordAgain}
                 required
               />
-              {inputs.password !== inputs.passwordAgain && (
-                <span
-                  style={{
-                    color: "red",
-                    fontSize: 14,
-                    position: "absolute",
-                    left: 0,
-                    top: "80%",
-                    opacity: 0.7,
-                  }}
-                >
-                  {" "}
-                  *Passwords should match
-                </span>
-              )}
+              {inputs.password !== inputs.passwordAgain &&
+                inputs.passwordAgain.length > 0 && (
+                  <span
+                    style={{
+                      color: "red",
+                      fontSize: 14,
+                      position: "absolute",
+                      left: 0,
+                      top: "80%",
+                      opacity: 0.7,
+                    }}
+                  >
+                    {" "}
+                    *Passwords should match
+                  </span>
+                )}
             </div>
           </div>
 
