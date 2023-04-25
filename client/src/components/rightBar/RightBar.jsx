@@ -17,6 +17,7 @@ const RightBar = () => {
     data: requests,
   } = useQuery({
     queryKey: ["pendingRequests", currentUser._id],
+    refetchInterval: 3000,
     queryFn: async () => {
       const res = await makeRequest().get("/relationship/pending");
       return res.data.data;
@@ -31,6 +32,7 @@ const RightBar = () => {
 
   const requestsMutation = useMutation(
     ([action, userId]) => {
+      console.log(action);
       if (action === "delete") {
         return makeRequest().delete("/relationship/delete", {
           data: { user_id: userId },
@@ -40,8 +42,17 @@ const RightBar = () => {
     },
     {
       onSuccess: (res, variables) => {
+        console.log(variables);
         toast.success(res.data.message);
         queryClient.invalidateQueries(["pendingRequests"]);
+        queryClient.invalidateQueries(
+          ["userRelationship", currentUser._id, variables[1]],
+          {
+            exact: true,
+          }
+        );
+        queryClient.refetchQueries(["posts", variables[1]]);
+        queryClient.refetchQueries(["posts", currentUser._id]);
       },
     }
   );
@@ -111,7 +122,9 @@ const RightBar = () => {
         </div>
       </div>
       <div className="divider"></div>
-      <div className="message-container"></div>
+      <div className="message-container">
+        <p>Chat</p> <p>Coming Soon...</p>
+      </div>
     </div>
   );
 };

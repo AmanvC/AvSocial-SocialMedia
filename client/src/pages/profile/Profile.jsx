@@ -45,6 +45,7 @@ const Profile = () => {
     error: relationshipError,
   } = useQuery({
     queryKey: ["userRelationship", currentUser._id, userId],
+    refetchInterval: 3000,
     queryFn: async () => {
       const res = await makeRequest().get(`/relationship/status/${userId}`);
       return res.data.data;
@@ -192,7 +193,7 @@ const Profile = () => {
             />
           </div>
         </div>
-        {userPosts ? (
+        {userPosts && relationship?.status == "Accepted" ? (
           <div className="posts" style={{ margin: 10 }}>
             {userPosts?.map((post) => (
               <Post key={post._id} post={post} />

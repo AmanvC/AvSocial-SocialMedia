@@ -137,6 +137,13 @@
 
   .message-container {
     min-height: 48%;
-    background-color: blue;
+    text-align: center;
+    color: lightgray;
+    border: 1px dashed lightgray;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    // background-color: blue;
   }
 }

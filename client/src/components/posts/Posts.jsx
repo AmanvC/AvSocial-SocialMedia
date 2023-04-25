@@ -6,6 +6,7 @@ import { makeRequest } from "../../axios";
 import { AuthContext } from "../../context/authContext";
 import Share from "./share/Share";
 import toast from "react-hot-toast";
+import { AiOutlineReload } from "react-icons/ai";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 
 const Posts = () => {
@@ -49,6 +50,11 @@ const Posts = () => {
     toast.success("Post Created Successfully.");
   };
 
+  const refreshPosts = () => {
+    setTimestamp(null);
+    remove();
+  };
+
   if (error) {
     if (error?.response?.data === "Unauthorized") {
       logout();
@@ -81,6 +87,12 @@ const Posts = () => {
         </div>
       ) : (
         <>
+          <p style={{ textAlign: "center", opacity: 0.4 }}>
+            <AiOutlineReload
+              style={{ cursor: "pointer" }}
+              onClick={refreshPosts}
+            />
+          </p>
           {posts?.pages
             ?.flatMap((data) => data.data)
             .map((post) => (
@@ -95,7 +107,7 @@ const Posts = () => {
       )}
       {hasNextPage && (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
-          Fetch more
+          Load more
         </button>
       )}
     </div>

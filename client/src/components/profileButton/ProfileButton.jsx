@@ -36,6 +36,7 @@ const ProfileButton = ({
       queryClient.invalidateQueries(["pendingRequests", currentUser._id], {
         exact: true,
       });
+      queryClient.invalidateQueries(["posts", userId], { exact: true });
     },
     onError: (res) => {
       toast.error(res.response.data.message || "Something went wrong!");
