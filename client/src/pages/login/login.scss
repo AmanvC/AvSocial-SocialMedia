@@ -6,7 +6,8 @@
   }
   box-sizing: border-box;
   margin: 0;
-  background-image: url("../../assets/login.jpeg");
+  background-color: lightgray;
+  background-image: url("../../assets/login.jpg");
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -202,7 +203,7 @@
               opacity: 0.4;
             }
 
-            &:hover {
+            &:focus {
               border: 1px solid rgba(0, 0, 255, 0.479);
             }
           }

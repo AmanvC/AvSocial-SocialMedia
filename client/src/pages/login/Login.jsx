@@ -52,8 +52,8 @@ const Login = () => {
           <div id="signup-container">
             <p>
               By continuing you indicate that you agree to AvSocial's{" "}
-              <Link to="">Terms of Service</Link> and{" "}
-              <Link to="">Privacy Policy</Link>
+              <Link to="/terms">Terms of Service</Link> and{" "}
+              <Link to="/privacy-policy">Privacy Policy</Link>
             </p>
             <Link to="/auth/google">
               <div className="social-signup">
@@ -105,7 +105,7 @@ const Login = () => {
                 />
               </div>
               <div id="actions">
-                <Link to="">Forgot password?</Link>
+                <Link to="/reset-password">Forgot password?</Link>
                 <button
                   id="submit"
                   disabled={loading || !inputs.email || !inputs.password}

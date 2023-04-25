@@ -169,9 +169,6 @@ const Header = () => {
                       <TbSettings /> <span>Settings</span>
                     </Link>
                   </li>
-                  <li onClick={handleLogoutClick}>
-                    <MdLogout /> <span>Logout</span>
-                  </li>
                   <li>
                     <Link
                       target="_blank"
@@ -187,6 +184,9 @@ const Header = () => {
                     >
                       <RiContactsBook2Fill /> Manage Contacts
                     </Link>
+                  </li>
+                  <li onClick={handleLogoutClick}>
+                    <MdLogout /> <span>Logout</span>
                   </li>
                 </ul>
               </div>
