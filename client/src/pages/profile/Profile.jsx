@@ -193,7 +193,8 @@ const Profile = () => {
             />
           </div>
         </div>
-        {userPosts && relationship?.status == "Accepted" ? (
+        {(userPosts && relationship?.status == "Accepted") ||
+        currentUser._id == userId ? (
           <div className="posts" style={{ margin: 10 }}>
             {userPosts?.map((post) => (
               <Post key={post._id} post={post} />

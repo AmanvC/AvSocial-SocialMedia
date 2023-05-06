@@ -159,32 +159,32 @@ const Header = () => {
             {showUserOptions && (
               <div className="user-options" ref={userOptionRef}>
                 <ul>
-                  <li onClick={() => setShowUserOptions(false)}>
-                    <Link to={`/profile/${currentUser._id}`}>
+                  <Link to={`/profile/${currentUser._id}`}>
+                    <li onClick={() => setShowUserOptions(false)}>
                       <AiOutlineUser /> <span>Profile</span>
-                    </Link>
-                  </li>
-                  <li onClick={() => setShowUserOptions(false)}>
-                    <Link to={`/settings`}>
+                    </li>
+                  </Link>
+                  <Link to={`/settings`}>
+                    <li onClick={() => setShowUserOptions(false)}>
                       <TbSettings /> <span>Settings</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      target="_blank"
-                      to={"https://imovies-react.netlify.app/"}
-                    >
+                    </li>
+                  </Link>
+                  <Link
+                    target="_blank"
+                    to={"https://imovies-react.netlify.app/"}
+                  >
+                    <li>
                       <BiLinkExternal /> Explore Movies
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      target="_blank"
-                      to={"https://rcl-contacts-list.netlify.app/"}
-                    >
+                    </li>
+                  </Link>
+                  <Link
+                    target="_blank"
+                    to={"https://rcl-contacts-list.netlify.app/"}
+                  >
+                    <li>
                       <RiContactsBook2Fill /> Manage Contacts
-                    </Link>
-                  </li>
+                    </li>
+                  </Link>
                   <li onClick={handleLogoutClick}>
                     <MdLogout /> <span>Logout</span>
                   </li>

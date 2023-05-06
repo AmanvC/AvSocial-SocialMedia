@@ -22,19 +22,23 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [passwordValid, setPasswordValid] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const submitForm = async (e) => {
-    e.preventDefault();
     try {
+      e.preventDefault();
+      setLoading(true);
       const res = await makeRequest().post("/users/create-user", {
         ...inputs,
       });
+      setLoading(false);
       navigate("/login");
       toast.success(res.data.message);
     } catch (err) {
+      setLoading(false);
       toast.error(err.response.data.message);
     }
   };
@@ -220,8 +224,8 @@ const Register = () => {
           </div>
 
           <div id="button-container">
-            <button id="submit" disabled={!valid}>
-              <span>Signup</span>
+            <button id="submit" disabled={!valid || loading}>
+              <span>{loading ? "Loading..." : "Signup"}</span>
             </button>
           </div>
         </form>
