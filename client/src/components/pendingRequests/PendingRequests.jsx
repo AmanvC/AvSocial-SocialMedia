@@ -7,6 +7,7 @@ import { makeRequest } from "../../axios";
 import NoUserImage from "../../assets/NoUserImage.png";
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
+import Img from "../lazyLoadImage/Img";
 
 const PendingRequests = () => {
   const { currentUser } = useContext(AuthContext);
@@ -80,7 +81,7 @@ const PendingRequests = () => {
           requests?.map((request) => (
             <div className="element" key={request._id}>
               <div className="user-info">
-                <img
+                <Img
                   src={
                     request?.sentBy?.profileImage
                       ? `/uploads/${request?.sentBy?.profileImage}`

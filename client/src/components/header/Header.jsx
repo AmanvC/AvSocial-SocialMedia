@@ -14,6 +14,7 @@ import { BiLinkExternal } from "react-icons/bi";
 import { RiContactsBook2Fill } from "react-icons/ri";
 import { makeRequest } from "../../axios";
 import PendingRequests from "../pendingRequests/PendingRequests";
+import Img from "../lazyLoadImage/Img";
 
 const Header = () => {
   const { currentUser, logout } = useContext(AuthContext);
@@ -39,7 +40,7 @@ const Header = () => {
       };
       // add the event listener
       document.addEventListener("mousedown", handleOutsideClick);
-    }, [ref]);
+    }, [ref, state]);
   };
 
   const userOptionRef = useRef(null);
@@ -100,7 +101,7 @@ const Header = () => {
                             onClick={() => setShowResultContainer(false)}
                           >
                             <div className="searched-user-card">
-                              <img
+                              <Img
                                 src={
                                   result.profileImage
                                     ? `/uploads/${result.profileImage}`
@@ -154,6 +155,7 @@ const Header = () => {
               }
               className="user-info"
               onClick={() => setShowUserOptions(!showUserOptions)}
+              alt="user"
             />
             {showUserOptions && (
               <div className="user-options" ref={userOptionRef}>

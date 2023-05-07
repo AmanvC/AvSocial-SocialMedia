@@ -13,9 +13,9 @@ const Comment = ({ comment, currentUser, postId }) => {
   const queryClient = useQueryClient();
 
   const {
-    isLoading,
+    // isLoading,
     data: likes,
-    error,
+    // error,
   } = useQuery({
     queryKey: ["commentLikes", comment._id],
     queryFn: async () => {

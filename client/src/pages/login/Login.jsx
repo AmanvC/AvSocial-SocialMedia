@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 import "./login.scss";
 
 const Login = () => {

@@ -1,6 +1,6 @@
 import "./profile.scss";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { makeRequest } from "../../axios";
 import toast from "react-hot-toast";
@@ -19,7 +19,6 @@ const Profile = () => {
 
   const { currentUser, updateCurrentUser } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  // const [invalidUser, setInvalidUser] = useState(false);
   const [update, setUpdate] = useState(false);
   const [inputs, setInputs] = useState({});
 
@@ -31,7 +30,7 @@ const Profile = () => {
   const {
     isLoading: profileLoading,
     data: userProfile,
-    error: profileError,
+    // error: profileError,
   } = useQuery({
     queryKey: ["profile", userId],
     queryFn: async () => {
@@ -41,9 +40,9 @@ const Profile = () => {
   });
 
   const {
-    isLoading: relationshipLoading,
+    // isLoading: relationshipLoading,
     data: relationship,
-    error: relationshipError,
+    // error: relationshipError,
   } = useQuery({
     queryKey: ["userRelationship", currentUser._id, userId],
     refetchInterval: 3000,
@@ -54,9 +53,9 @@ const Profile = () => {
   });
 
   const {
-    isLoading: postsLoading,
+    // isLoading: postsLoading,
     data: userPosts,
-    error: postsError,
+    // error: postsError,
   } = useQuery({
     enabled: relationship != null || currentUser._id === userId,
     queryKey: ["posts", userId],
@@ -194,8 +193,8 @@ const Profile = () => {
             />
           </div>
         </div>
-        {(userPosts && relationship?.status == "Accepted") ||
-        currentUser._id == userId ? (
+        {(userPosts && relationship?.status === "Accepted") ||
+        currentUser._id === userId ? (
           <div className="posts" style={{ margin: 10 }}>
             {userPosts?.map((post) => (
               <Post key={post._id} post={post} />

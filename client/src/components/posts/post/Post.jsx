@@ -23,7 +23,7 @@ const Post = ({ post }) => {
   const {
     isLoading: commentsLoading,
     data: comments,
-    error: commentsError,
+    // error: commentsError,
   } = useQuery({
     queryKey: ["postComments", post._id],
     queryFn: async () => {
@@ -35,7 +35,7 @@ const Post = ({ post }) => {
   const {
     isLoading: likesLoading,
     data: likes,
-    error: likesError,
+    // error: likesError,
   } = useQuery({
     queryKey: ["postLikes", post._id],
     queryFn: async () => {
