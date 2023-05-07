@@ -35,7 +35,7 @@ module.exports.getUserPosts = async (req, res) => {
     const userId = req.params.id;
 
     const token = req.headers.authorization.split(" ")[1];
-    const currentUser = jwt.verify(token, "secretkey");
+    const currentUser = jwt.verify(token, process.env.JWT_KEY);
 
     const relationship = await Relationship.findOne({
       sentBy: { $in: [currentUser._id, userId] },
@@ -71,7 +71,7 @@ module.exports.getUserPosts = async (req, res) => {
 module.exports.updateUser = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    const currentUser = jwt.verify(token, "secretkey");
+    const currentUser = jwt.verify(token, process.env.JWT_KEY);
 
     if (currentUser._id !== req.body.userId) {
       return res.status(401).json({
@@ -103,7 +103,7 @@ module.exports.updateUser = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Profile updated successfully.",
-      token: jwt.sign(updatedData, "secretkey"),
+      token: jwt.sign(updatedData, process.env.JWT_KEY),
     });
   } catch (err) {
     console.log(err);

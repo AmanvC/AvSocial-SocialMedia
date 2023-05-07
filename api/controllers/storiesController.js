@@ -21,7 +21,7 @@ module.exports.getStories = async (req, res) => {
 module.exports.createStory = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, "secretkey");
+    const user = jwt.verify(token, process.env.JWT_KEY);
     const image = req.body.image;
 
     await Story.create({
@@ -44,7 +44,7 @@ module.exports.deleteStory = async (req, res) => {
   try {
     const storyId = req.query.storyId;
     const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, "secretkey");
+    const user = jwt.verify(token, process.env.JWT_KEY);
     const story = await Story.findById(storyId).populate("user");
     if (story.user.id !== user._id) {
       return res.status(401).json({

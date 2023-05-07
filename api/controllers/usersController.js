@@ -32,7 +32,7 @@ module.exports.createSession = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
-      token: jwt.sign(otherData, "secretkey"),
+      token: jwt.sign(otherData, process.env.JWT_KEY),
       status: user.status,
     });
   } catch (err) {

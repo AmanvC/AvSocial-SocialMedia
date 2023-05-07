@@ -42,7 +42,6 @@ const PendingRequests = () => {
     },
     {
       onSuccess: (res, variables) => {
-        console.log(variables);
         toast.success(res.data.message);
         queryClient.invalidateQueries(["pendingRequests"]);
         queryClient.invalidateQueries(

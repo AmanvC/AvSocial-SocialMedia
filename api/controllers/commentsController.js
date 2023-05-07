@@ -27,7 +27,7 @@ module.exports.createComment = async (req, res) => {
     const postId = req.query.postId;
     const content = req.body.content;
     const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, "secretkey");
+    const user = jwt.verify(token, process.env.JWT_KEY);
 
     await Comment.create({
       content,
@@ -51,7 +51,7 @@ module.exports.deleteComment = async (req, res) => {
   try {
     const commentId = req.query.commentId;
     const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, "secretkey");
+    const user = jwt.verify(token, process.env.JWT_KEY);
     const comment = await Comment.findById(commentId).populate("user");
 
     if (comment.user.id !== user._id) {
@@ -104,7 +104,7 @@ module.exports.likeComment = async (req, res) => {
   try {
     const commentId = req.query.commentId;
     const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, "secretkey");
+    const user = jwt.verify(token, process.env.JWT_KEY);
     await Like.create({
       user: user._id,
       likeable: commentId,
@@ -127,7 +127,7 @@ module.exports.unlikeComment = async (req, res) => {
   try {
     const commentId = req.query.commentId;
     const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, "secretkey");
+    const user = jwt.verify(token, process.env.JWT_KEY);
     await Like.deleteOne({
       user: user._id,
       likeable: commentId,

@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 module.exports.getRelationshipStatus = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    const currentUser = jwt.verify(token, "secretkey");
+    const currentUser = jwt.verify(token, process.env.JWT_KEY);
 
     const otherUserId = req.params.user_id;
 
@@ -13,7 +13,6 @@ module.exports.getRelationshipStatus = async (req, res) => {
       sentBy: { $in: [currentUser._id, otherUserId] },
       sentTo: { $in: [currentUser._id, otherUserId] },
     });
-    // console.log(relationship);
     return res.status(200).json({
       success: true,
       data: relationship,
@@ -30,14 +29,13 @@ module.exports.getRelationshipStatus = async (req, res) => {
 module.exports.createRelationshipRequest = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    const currentUser = jwt.verify(token, "secretkey");
+    const currentUser = jwt.verify(token, process.env.JWT_KEY);
 
     const otherUserId = req.body.user_id;
     const relationship = await Relationship.create({
       sentBy: currentUser._id,
       sentTo: otherUserId,
     });
-    console.log(relationship);
     return res.status(200).json({
       success: true,
       message: "Friend request sent.",
@@ -54,7 +52,7 @@ module.exports.createRelationshipRequest = async (req, res) => {
 module.exports.acceptRelationship = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    const currentUser = jwt.verify(token, "secretkey");
+    const currentUser = jwt.verify(token, process.env.JWT_KEY);
 
     const otherUserId = req.body.user_id;
 
@@ -84,7 +82,7 @@ module.exports.acceptRelationship = async (req, res) => {
 module.exports.deleteRelationship = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    const currentUser = jwt.verify(token, "secretkey");
+    const currentUser = jwt.verify(token, process.env.JWT_KEY);
 
     const otherUserId = req.body.user_id;
 
@@ -108,7 +106,7 @@ module.exports.deleteRelationship = async (req, res) => {
 module.exports.pendingRelationships = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, "secretkey");
+    const user = jwt.verify(token, process.env.JWT_KEY);
 
     const relationships = await Relationship.find({
       sentTo: user._id,

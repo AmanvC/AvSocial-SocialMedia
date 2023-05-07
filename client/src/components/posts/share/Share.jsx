@@ -50,8 +50,6 @@ const Share = ({ setTimestamp, updatePostsList }) => {
     setFile(e.target.files[0]);
   };
 
-  // console.log(file);
-
   return (
     <div className="share">
       <div className="post-inputs">

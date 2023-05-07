@@ -52,7 +52,6 @@ const Header = () => {
   OutsideClick(friendRequestsRef, setShowFriendRequests);
 
   const handleSearchUser = async (e) => {
-    console.log(e.target.value);
     if (searchInput.length > 2) {
       setLoading(true);
       const res = await makeRequest().get(

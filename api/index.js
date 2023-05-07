@@ -1,11 +1,11 @@
 const express = require("express");
 const port = 5000;
+const dotenv = require("dotenv").config();
 const passport = require("passport");
 const passportJwt = require("./config/passport-jwt-strategy");
 const db = require("./config/mongoose");
 const cors = require("cors");
 const multer = require("multer");
-const dotenv = require("dotenv").config();
 
 const app = express();
 

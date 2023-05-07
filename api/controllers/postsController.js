@@ -9,7 +9,7 @@ const path = require("path");
 module.exports.getPosts = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, "secretkey");
+    const user = jwt.verify(token, process.env.JWT_KEY);
 
     const { page, timestamp } = req.query;
 
@@ -49,8 +49,6 @@ module.exports.getPosts = async (req, res) => {
       nextPage = true;
     }
 
-    console.log(allPosts);
-
     return res.status(200).json({
       success: true,
       data: allPosts,
@@ -72,7 +70,7 @@ module.exports.createPost = async (req, res) => {
   try {
     const data = req.body;
     const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, "secretkey");
+    const user = jwt.verify(token, process.env.JWT_KEY);
     if (!data.image && !data.content) {
       return res.status(400).json({
         success: false,
@@ -100,7 +98,7 @@ module.exports.deletePost = async (req, res) => {
   try {
     const postId = req.query.postId;
     const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, "secretkey");
+    const user = jwt.verify(token, process.env.JWT_KEY);
 
     const post = await Post.findById(postId).populate("user");
     if (post.user.id !== user._id) {
@@ -166,7 +164,7 @@ module.exports.addPostLike = async (req, res) => {
   try {
     const postId = req.body.postId;
     const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, "secretkey");
+    const user = jwt.verify(token, process.env.JWT_KEY);
     await Like.create({
       user: user._id,
       likeable: postId,
@@ -189,7 +187,7 @@ module.exports.deletePostLike = async (req, res) => {
   try {
     const postId = req.query.postId;
     const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, "secretkey");
+    const user = jwt.verify(token, process.env.JWT_KEY);
     await Like.findOneAndDelete({
       user: user._id,
       likeable: postId,
