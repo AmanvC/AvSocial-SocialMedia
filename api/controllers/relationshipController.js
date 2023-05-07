@@ -32,7 +32,7 @@ module.exports.createRelationshipRequest = async (req, res) => {
     const currentUser = jwt.verify(token, process.env.JWT_KEY);
 
     const otherUserId = req.body.user_id;
-    const relationship = await Relationship.create({
+    await Relationship.create({
       sentBy: currentUser._id,
       sentTo: otherUserId,
     });

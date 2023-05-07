@@ -113,7 +113,7 @@ const ProfileButton = ({
       };
       // add the event listener
       document.addEventListener("mousedown", handleOutsideClick);
-    }, [ref]);
+    }, [ref, state]);
   };
 
   const removeFriendRef = useRef(null);
@@ -153,7 +153,7 @@ const ProfileButton = ({
             onClick={() => setShowRemoveFriend(true)}
             style={{ display: "flex", alignItems: "center", gap: 5 }}
           >
-            <GoCheck /> Friend <AiFillCaretDown />
+            <GoCheck /> Friends <AiFillCaretDown />
           </button>
         )
       ) : relationship.sentBy === currentUser._id ? (

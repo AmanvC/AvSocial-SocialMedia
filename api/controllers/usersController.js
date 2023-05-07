@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodeMailer = require("../mailers/verify-account-mailer");
 const crypto = require("crypto");
+const Relationship = require("../models/Relationship");
 
 module.exports.createSession = async (req, res) => {
   try {
@@ -88,7 +89,7 @@ module.exports.createUser = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "User created successfully.",
+      message: "User created successfully. Please verify email to continue.",
     });
   } catch (err) {
     console.log(err);
@@ -107,13 +108,57 @@ module.exports.verifyUserEmail = async (req, res) => {
     if (user && user.status === "Pending") {
       user.status = "Active";
       user.save();
+      const avSocialMedia = await User.findOne({
+        email: "media.avsocial@gmail.com",
+      });
+      if (avSocialMedia) {
+        await Relationship.create({
+          sentBy: user.id,
+          sentTo: avSocialMedia.id,
+          status: "Accepted",
+        });
+      }
       return res.end(
-        "<h1>Email verified successfully, please login to continue</h1>"
+        `
+        <!DOCTYPE html>
+        <html lang="en">
+          <body>
+            <style>
+              * {
+                box-sizing: border-box;
+                margin: 0;
+              }
+            </style>
+            <div
+              style="
+                height: 100vh;
+                width: 100vw;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding-top: 200px;
+                gap: 40px;
+              "
+            >
+              <h1 style="color: rgb(158, 64, 64); font-size: 6em">AvSocial</h1>
+              <h2 style="font-size: 3em; text-align: center">
+                Email verified successfully, please
+                <a
+                  href="http://localhost:3000/login"
+                  style="color: rgb(158, 64, 64); cursor: pointer"
+                  >Login</a
+                >
+                to continue.
+              </h2>
+            </div>
+          </body>
+        </html>        
+        `
       );
     }
     return res.redirect("http://localhost:3000/login");
   } catch (err) {
     console.log(err);
-    return res.end("<h1>Something Went Wrong!</h1>");
+    return res.redirect("http://localhost:3000/login");
   }
 };
