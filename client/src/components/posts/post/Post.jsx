@@ -12,6 +12,7 @@ import { MdDeleteForever } from "react-icons/md";
 import Comment from "./comment/Comment";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Img from "../../lazyLoadImage/Img";
 
 const Post = ({ post }) => {
   const [showComments, setShowComments] = useState(false);
@@ -104,14 +105,13 @@ const Post = ({ post }) => {
     <div className="post">
       <div className="post-details">
         <div className="user">
-          <img
+          <Img
             className="current-user-image"
             src={
               post.user.profileImage
                 ? `/uploads/${post.user.profileImage}`
                 : NoUserImage
             }
-            alt=""
           />
           {commentsLoading ? (
             <p>loading...</p>
@@ -138,7 +138,7 @@ const Post = ({ post }) => {
         )}
         {post.image && (
           <div className="post-image">
-            <img src={"/uploads/" + post.image} alt={post.image} />
+            <Img src={"/uploads/" + post.image} />
           </div>
         )}
       </div>

@@ -12,6 +12,7 @@ import NoCoverImage from "../../assets/NoCoverImage.jpg";
 import Post from "../../components/posts/post/Post";
 import ProfileButton from "../../components/profileButton/ProfileButton";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import Img from "../../components/lazyLoadImage/Img";
 
 const Profile = () => {
   const userId = useLocation().pathname.split("/")[2];
@@ -161,23 +162,23 @@ const Profile = () => {
       <div className="profile">
         <div className="user-details-container">
           <div className="images">
-            <img
+            <Img
+              className="cover-image"
               src={
                 userProfile.coverImage
                   ? `/uploads/${userProfile.coverImage}`
                   : NoCoverImage
               }
               style={{ backgroundColor: "white" }}
-              className="cover-image"
             />
-            <img
+            <Img
+              className="profile-image"
               src={
                 userProfile.profileImage
                   ? `/uploads/${userProfile.profileImage}`
                   : NoUserImage
               }
               style={{ backgroundColor: "white" }}
-              className="profile-image"
             />
           </div>
           <div className="user-info">
@@ -259,7 +260,7 @@ const Profile = () => {
                     onClick={(e) => (e.target.value = null)}
                     onChange={checkUploadedProfileImage}
                   />
-                  <img
+                  <Img
                     src={
                       uploadedProfileImage
                         ? URL.createObjectURL(uploadedProfileImage)
@@ -268,7 +269,6 @@ const Profile = () => {
                     style={{
                       lineHeight: 9,
                     }}
-                    alt="No Profile Image"
                   />
                 </div>
                 <div className="cover-image">
@@ -286,7 +286,7 @@ const Profile = () => {
                     onClick={(e) => (e.target.value = null)}
                     onChange={checkUploadedCoverImage}
                   />
-                  <img
+                  <Img
                     src={
                       uploadedCoverImage
                         ? URL.createObjectURL(uploadedCoverImage)
@@ -296,7 +296,6 @@ const Profile = () => {
                       lineHeight: 9,
                       textAlign: "center",
                     }}
-                    alt="No Cover Image."
                   />
                 </div>
               </div>

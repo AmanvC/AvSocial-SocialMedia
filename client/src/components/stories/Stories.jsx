@@ -6,6 +6,7 @@ import { useState } from "react";
 import { makeRequest } from "../../axios";
 import toast from "react-hot-toast";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import Img from "../lazyLoadImage/Img";
 
 const Stories = () => {
   const [file, setFile] = useState(null);
@@ -78,7 +79,7 @@ const Stories = () => {
       {file && (
         <div className="uploaded-image">
           <div className="form">
-            <img className="file" alt="" src={URL.createObjectURL(file)} />
+            <Img className="file" src={URL.createObjectURL(file)} />
             <div className="buttons">
               <button className="upload" onClick={handleUpload}>
                 Upload

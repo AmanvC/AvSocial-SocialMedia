@@ -3,6 +3,7 @@ import { makeRequest } from "../../../axios";
 import { AuthContext } from "../../../context/authContext";
 import "./share.scss";
 import toast from "react-hot-toast";
+import Img from "../../lazyLoadImage/Img";
 
 const Share = ({ setTimestamp, updatePostsList }) => {
   const [file, setFile] = useState(null);
@@ -60,9 +61,7 @@ const Share = ({ setTimestamp, updatePostsList }) => {
           value={postInput}
           onChange={(e) => setPostInput(e.target.value)}
         />
-        {file && (
-          <img className="file" alt="" src={URL.createObjectURL(file)} />
-        )}
+        {file && <Img className="file" src={URL.createObjectURL(file)} />}
       </div>
       <div className="action-buttons">
         <input

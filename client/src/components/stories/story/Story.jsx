@@ -9,6 +9,7 @@ import { AuthContext } from "../../../context/authContext";
 import { makeRequest } from "../../../axios";
 import { Link } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Img from "../../lazyLoadImage/Img";
 
 const Story = ({ story }) => {
   const [showStory, setShowStory] = useState(false);
@@ -36,20 +37,19 @@ const Story = ({ story }) => {
             <span className="text">{story.user.firstName}</span>
             <span className="text">{story.user.lastName}</span>
           </div>
-          <img src={`/uploads/${story.image}`} />
+          <Img src={`/uploads/${story.image}`} />
         </div>
       ) : (
         <div className="show-story-wrapper">
           <div className="show-story">
             <div className="user-details">
-              <img
+              <Img
+                className="user-image"
                 src={
                   story.user.profileImage
                     ? `/uploads/${story.user.profileImage}`
                     : NoUserImage
                 }
-                alt=""
-                className="user-image"
               />
               <div className="details">
                 <p className="user-name">
@@ -63,7 +63,7 @@ const Story = ({ story }) => {
             <span className="close" onClick={() => setShowStory(false)}>
               ✖
             </span>
-            <img className="view-story" src={`/uploads/${story.image}`} />
+            <Img className="view-story" src={`/uploads/${story.image}`} />
             {currentUser._id === story.user._id && (
               <button
                 className="delete"

@@ -21,6 +21,7 @@
     color: #fff;
     text-align: center;
     border-radius: 10px;
+    z-index: 10;
 
     @include sm {
       height: 50px;
@@ -43,16 +44,20 @@
     }
   }
 
-  img {
-    width: 120px;
+  .lazy-load-image-background {
     height: 100%;
-    border-radius: 10px;
-    object-fit: cover;
 
-    @include sm {
-      height: 50px;
-      width: 50px;
-      border-radius: 50%;
+    img {
+      width: 120px;
+      height: 100%;
+      border-radius: 10px;
+      object-fit: cover;
+
+      @include sm {
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+      }
     }
   }
 }
@@ -68,7 +73,7 @@
   justify-content: center;
   align-items: center;
   z-index: 10000;
-  transition: 0.25s ease-in-out;
+  // transition: 0.25s ease-in-out;
 
   .show-story {
     display: flex;
@@ -92,11 +97,13 @@
       gap: 15px;
       align-items: center;
 
-      .user-image {
-        height: 40px;
-        width: 40px;
-        object-fit: cover;
-        border-radius: 50%;
+      .lazy-load-image-background {
+        img {
+          height: 50px;
+          width: 50px;
+          object-fit: cover;
+          border-radius: 50%;
+        }
       }
 
       .details {
@@ -129,16 +136,18 @@
       }
     }
 
-    .view-story {
-      height: 70vh;
-      max-width: 100%;
-      aspect-ratio: 1/1.5;
-      object-fit: cover;
-      border-radius: 10px;
-      box-shadow: 1px 1px 10px black;
+    .lazy-load-image-background {
+      img {
+        height: 70vh;
+        max-width: 100%;
+        aspect-ratio: 1/1.5;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 1px 1px 10px black;
 
-      @include sm {
-        height: 400px;
+        @include sm {
+          height: 400px;
+        }
       }
     }
 

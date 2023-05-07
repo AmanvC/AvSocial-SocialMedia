@@ -1,8 +1,8 @@
 import "./comment.scss";
 import NoUserImage from "../../../../assets/NoUserImage.png";
 import { makeRequest } from "../../../../axios";
+import Img from "../../../lazyLoadImage/Img";
 
-import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import moment from "moment";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
@@ -72,13 +72,12 @@ const Comment = ({ comment, currentUser, postId }) => {
   return (
     <div className="comment">
       <div className="profile-image">
-        <img
+        <Img
           src={
             comment.user.profileImage
               ? `/uploads/${comment.user.profileImage}`
               : NoUserImage
           }
-          alt=""
         />
       </div>
       <div className="comment-content">
