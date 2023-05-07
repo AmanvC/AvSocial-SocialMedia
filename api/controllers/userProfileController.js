@@ -44,10 +44,9 @@ module.exports.getUserPosts = async (req, res) => {
     });
 
     if (relationship || currentUser._id === userId) {
-      const userPosts = await Post.find({ user: userId }).populate(
-        "user",
-        "_id firstName lastName profileImage"
-      );
+      const userPosts = await Post.find({ user: userId })
+        .sort("-createdAt")
+        .populate("user", "_id firstName lastName profileImage");
 
       return res.status(200).json({
         success: true,
