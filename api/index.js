@@ -5,6 +5,7 @@ const passportJwt = require("./config/passport-jwt-strategy");
 const db = require("./config/mongoose");
 const cors = require("cors");
 const multer = require("multer");
+const dotenv = require("dotenv").config();
 
 const app = express();
 

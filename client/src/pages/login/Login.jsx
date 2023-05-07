@@ -13,16 +13,12 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const { currentUser, login } = useContext(AuthContext);
 
-  const navigate = useNavigate();
-
   const submitForm = async (e) => {
     setLoading(true);
     e.preventDefault();
     try {
       await login(inputs.email, inputs.password);
-      navigate("/");
       setLoading(false);
-      toast.success("Logged in successfully.");
     } catch (err) {
       setError(err.response.data.message);
       setLoading(false);

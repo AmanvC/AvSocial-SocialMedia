@@ -9,6 +9,7 @@ import { makeRequest } from "../axios";
 import jwt from "jwt-decode";
 
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext(null);
 
@@ -16,6 +17,7 @@ export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const navigate = useNavigate();
   useEffect(() => {
     const userToken = getItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
     if (userToken) {
@@ -31,8 +33,16 @@ export const AuthContextProvider = ({ children }) => {
         email,
         password,
       });
+      if (res.data.status === "Pending") {
+        toast.error(
+          "Email is not verified, please verify it before proceding. Verification email sent."
+        );
+        return;
+      }
       setItemInLocalStorage(LOCALSTORAGE_TOKEN_KEY, res.data.token);
       setCurrentUser(jwt(res.data.token));
+      navigate("/");
+      toast.success("Logged in successfully.");
     } catch (err) {
       toast.error(err.response.data.message || "Internal server error!");
     }

@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const nodeMailer = require("../mailers/verify-account-mailer");
+const crypto = require("crypto");
 
 module.exports.createSession = async (req, res) => {
   try {
@@ -9,7 +11,7 @@ module.exports.createSession = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User not found!",
+        message: "User does not exist!",
       });
     }
     const checkPassword = await bcrypt.compare(data.password, user.password);
@@ -20,9 +22,18 @@ module.exports.createSession = async (req, res) => {
       });
     }
     const { password, ...otherData } = user;
+    if (otherData.status === "Pending") {
+      nodeMailer.sendConfirmationEmail(
+        otherData.firstName,
+        otherData.lastName,
+        otherData.email,
+        otherData.confirmationCode
+      );
+    }
     return res.status(200).json({
       success: true,
       token: jwt.sign(otherData, "secretkey"),
+      status: user.status,
     });
   } catch (err) {
     return res.status(500).json({
@@ -55,6 +66,14 @@ module.exports.createUser = async (req, res) => {
           "User with given email ID already exists, please login to continue.",
       });
     }
+
+    const confirmationCode = crypto.randomBytes(20).toString("hex");
+    nodeMailer.sendConfirmationEmail(
+      data.firstName,
+      data.lastName,
+      data.email,
+      confirmationCode
+    );
     // CREATE A NEW USER and Hash the password
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(data.password, salt);
@@ -64,6 +83,7 @@ module.exports.createUser = async (req, res) => {
       lastName: data.lastName,
       email: data.email,
       password: hashedPassword,
+      confirmationCode,
     });
 
     return res.status(201).json({
@@ -76,5 +96,24 @@ module.exports.createUser = async (req, res) => {
       success: false,
       message: err,
     });
+  }
+};
+
+module.exports.verifyUserEmail = async (req, res) => {
+  try {
+    let user = await User.findOne({
+      confirmationCode: req.params.confirmationCode,
+    });
+    if (user && user.status === "Pending") {
+      user.status = "Active";
+      user.save();
+      return res.end(
+        "<h1>Email verified successfully, please login to continue</h1>"
+      );
+    }
+    return res.redirect("http://localhost:3000/login");
+  } catch (err) {
+    console.log(err);
+    return res.end("<h1>Something Went Wrong!</h1>");
   }
 };

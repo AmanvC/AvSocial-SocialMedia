@@ -25,6 +25,15 @@ const userSchema = new mongoose.Schema(
     coverImage: {
       type: String,
     },
+    status: {
+      type: String,
+      enum: ["Active", "Pending"],
+      default: "Pending",
+    },
+    confirmationCode: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
