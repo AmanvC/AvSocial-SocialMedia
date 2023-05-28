@@ -1,6 +1,13 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://127.0.0.1/fullstack-social-media");
+const url = process.env.MONGODB_URI;
+
+const connectionParams = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
+
+mongoose.connect(url, connectionParams);
 
 const db = mongoose.connection;
 

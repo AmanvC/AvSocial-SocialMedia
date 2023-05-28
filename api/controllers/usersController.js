@@ -5,6 +5,8 @@ const nodeMailer = require("../mailers/verify-account-mailer");
 const crypto = require("crypto");
 const Relationship = require("../models/Relationship");
 
+const { getUrl } = require("../config/s3");
+
 module.exports.createSession = async (req, res) => {
   try {
     const data = req.body;
@@ -31,6 +33,15 @@ module.exports.createSession = async (req, res) => {
         otherData.confirmationCode
       );
     }
+    if (otherData.profileImage) {
+      const url = await getUrl(otherData.profileImage);
+      otherData.profileImage = url;
+    }
+    if (otherData.coverImage) {
+      const url = await getUrl(otherData.coverImage);
+      otherData.coverImage = url;
+    }
+    console.log(otherData);
     return res.status(200).json({
       success: true,
       token: jwt.sign(otherData, process.env.JWT_KEY),
@@ -144,7 +155,7 @@ module.exports.verifyUserEmail = async (req, res) => {
               <h2 style="font-size: 3em; text-align: center">
                 Email verified successfully, please
                 <a
-                  href="http://localhost:3000/login"
+                  href="${process.env.CLIENT_URL}"
                   style="color: rgb(158, 64, 64); cursor: pointer"
                   >Login</a
                 >
@@ -156,9 +167,9 @@ module.exports.verifyUserEmail = async (req, res) => {
         `
       );
     }
-    return res.redirect("http://localhost:3000/login");
+    return res.redirect("https://avsocial-media.onrender.com");
   } catch (err) {
     console.log(err);
-    return res.redirect("http://localhost:3000/login");
+    return res.redirect("https://avsocial-media.onrender.com");
   }
 };

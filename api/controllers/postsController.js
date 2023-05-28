@@ -3,8 +3,8 @@ const Comment = require("../models/Comment");
 const Like = require("../models/Like");
 const Relationship = require("../models/Relationship");
 const jwt = require("jsonwebtoken");
-const fs = require("fs");
-const path = require("path");
+
+const { getUrl, deleteImage } = require("../config/s3");
 
 module.exports.getPosts = async (req, res) => {
   try {
@@ -47,6 +47,21 @@ module.exports.getPosts = async (req, res) => {
     const nextPosts = await Post.find(query).skip(page * 10);
     if (nextPosts.length > 0) {
       nextPage = true;
+    }
+
+    for (const post of allPosts) {
+      if (post.image) {
+        const url = await getUrl(post.image);
+        post.image = url;
+      }
+      if (post.user.profileImage) {
+        const url = await getUrl(post.user.profileImage);
+        post.user.profileImage = url;
+      }
+      if (post.user.coverImage) {
+        const url = await getUrl(post.user.coverImage);
+        post.user.coverImage = url;
+      }
     }
 
     return res.status(200).json({
@@ -109,9 +124,13 @@ module.exports.deletePost = async (req, res) => {
     }
 
     if (post.image) {
-      fs.unlinkSync(
-        path.join(__dirname, `../../client/public/uploads/${post.image}`)
-      );
+      const isImageDeleted = await deleteImage(post.image);
+      if (!isImageDeleted) {
+        return res.status(500).json({
+          success: false,
+          message: "Internal server error!",
+        });
+      }
     }
 
     // delete comment likes

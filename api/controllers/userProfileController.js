@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const path = require("path");
 
+const { getUrl, deleteImage } = require("../config/s3");
+
 module.exports.getUserDetails = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -16,6 +18,16 @@ module.exports.getUserDetails = async (req, res) => {
       });
     }
     const { password, ...otherData } = user;
+
+    if (otherData.profileImage) {
+      const url = await getUrl(otherData.profileImage);
+      otherData.profileImage = url;
+    }
+
+    if (otherData.coverImage) {
+      const url = await getUrl(otherData.coverImage);
+      otherData.coverImage = url;
+    }
 
     return res.status(200).json({
       success: true,
@@ -47,6 +59,21 @@ module.exports.getUserPosts = async (req, res) => {
       const userPosts = await Post.find({ user: userId })
         .sort("-createdAt")
         .populate("user", "_id firstName lastName profileImage");
+
+      for (const post of userPosts) {
+        if (post.image) {
+          const url = await getUrl(post.image);
+          post.image = url;
+        }
+        if (post.user.profileImage) {
+          const url = await getUrl(post.user.profileImage);
+          post.user.profileImage = url;
+        }
+        if (post.user.coverImage) {
+          const url = await getUrl(post.user.coverImage);
+          post.user.coverImage = url;
+        }
+      }
 
       return res.status(200).json({
         success: true,
@@ -80,25 +107,28 @@ module.exports.updateUser = async (req, res) => {
     }
 
     const user = await User.findById(req.body.userId);
-
-    // remove current profile image if we have added a new image
-    if (user.profileImage && user.profileImage !== req.body.profileImage) {
-      fs.unlinkSync(
-        path.join(__dirname, `../../client/public/uploads/${user.profileImage}`)
-      );
+    if (req.body.profileImage) {
+      await deleteImage(user.profileImage);
+    }
+    if (req.body.coverImage) {
+      await deleteImage(user.coverImage);
     }
 
-    // remove current cover image if we have added a new image
-    if (user.coverImage && user.coverImage !== req.body.coverImage) {
-      fs.unlinkSync(
-        path.join(__dirname, `../../client/public/uploads/${user.coverImage}`)
-      );
-    }
     await User.findByIdAndUpdate(req.body.userId, req.body);
 
     const { password, ...updatedData } = await User.findById(
       req.body.userId
     ).lean();
+
+    if (updatedData.profileImage) {
+      const url = await getUrl(updatedData.profileImage);
+      updatedData.profileImage = url;
+    }
+    if (updatedData.coverImage) {
+      const url = await getUrl(updatedData.coverImage);
+      updatedData.coverImage = url;
+    }
+
     return res.status(200).json({
       success: true,
       message: "Profile updated successfully.",
@@ -136,6 +166,13 @@ module.exports.searchUser = async (req, res) => {
       const { password, ...otherData } = user;
       return otherData;
     });
+
+    for (const user of usersWithoutPassword) {
+      if (user.profileImage) {
+        const url = await getUrl(user.profileImage);
+        user.profileImage = url;
+      }
+    }
     return res.status(200).json({
       success: true,
       data: usersWithoutPassword,
