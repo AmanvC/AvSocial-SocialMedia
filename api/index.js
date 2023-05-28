@@ -17,7 +17,7 @@ const app = express();
 // });
 app.use(
   cors({
-    origin: process.env.CLIENT_URL
+    origin: process.env.CLIENT_URL,
   })
 );
 
@@ -31,7 +31,7 @@ app.post(
   upload.single("file"),
   async (req, res) => {
     const buffer = await sharp(req.file.buffer)
-      .resize({ height: 1920, width: 1080, fit: "contain" })
+      .resize({ height: 1080, width: 1080, fit: "contain" })
       .toBuffer();
     const imageName = await uploadFile(buffer);
     return res.status(200).json(imageName);

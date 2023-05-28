@@ -156,11 +156,15 @@ module.exports.searchUser = async (req, res) => {
           { firstName: { $regex: fname, $options: "i" } },
           { lastName: { $regex: lname, $options: "i" } },
         ],
-      }).lean();
+      })
+        .find({ _id: { $ne: req.user._id } })
+        .lean();
     } else {
       users = await User.find({
         firstName: { $regex: fname, $options: "i" },
-      }).lean();
+      })
+        .find({ _id: { $ne: req.user._id } })
+        .lean();
     }
     const usersWithoutPassword = users?.map((user) => {
       const { password, ...otherData } = user;

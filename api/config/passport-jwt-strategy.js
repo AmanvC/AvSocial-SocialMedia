@@ -12,10 +12,11 @@ let options = {
 passport.use(
   new JWTStrategy(options, async (jwtPayload, done) => {
     try {
-      const user = await User.findOne({ username: jwtPayload.username });
+      const user = await User.findOne({ email: jwtPayload.email });
 
       if (user) {
-        return done(null, user);
+        const { password, ...otherData } = user._doc;
+        return done(null, otherData);
       } else {
         return done(null, false);
       }
