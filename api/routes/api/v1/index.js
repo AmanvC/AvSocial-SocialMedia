@@ -28,5 +28,15 @@ router.use(
   passport.authenticate("jwt", { session: false }),
   require("./relationship")
 );
+router.use(
+  "/messages",
+  passport.authenticate("jwt", { session: false }),
+  require("./messages")
+);
+router.use(
+  "/chats",
+  passport.authenticate("jwt", { session: false }),
+  require("./chats")
+);
 
 module.exports = router;
