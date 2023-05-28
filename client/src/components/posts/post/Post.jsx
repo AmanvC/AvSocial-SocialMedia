@@ -67,7 +67,7 @@ const Post = ({ post }) => {
     },
     onSuccess: (res) => {
       toast.success(res?.data?.message || "Post deleted successfully.");
-      queryClient.invalidateQueries(["posts", "infinite", currentUser._id]);
+      queryClient.invalidateQueries(["posts"]);
     },
     onError: (err) => {
       toast.error(err.response.data.message);
@@ -107,11 +107,7 @@ const Post = ({ post }) => {
         <div className="user">
           <Img
             className="current-user-image"
-            src={
-              post.user.profileImage
-                ? `/uploads/${post.user.profileImage}`
-                : NoUserImage
-            }
+            src={post.user.profileImage ? post.user.profileImage : NoUserImage}
           />
           {commentsLoading ? (
             <p>loading...</p>
@@ -138,7 +134,7 @@ const Post = ({ post }) => {
         )}
         {post.image && (
           <div className="post-image">
-            <Img src={"/uploads/" + post.image} />
+            <Img src={post.image} />
           </div>
         )}
       </div>

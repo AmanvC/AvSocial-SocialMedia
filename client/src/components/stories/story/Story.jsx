@@ -34,10 +34,10 @@ const Story = ({ story }) => {
       {!showStory ? (
         <div className="story" onClick={() => setShowStory(true)}>
           <div className="layer">
-            <span className="text">{story.user.firstName}</span>
-            <span className="text">{story.user.lastName}</span>
+            <span className="text">{story?.user?.firstName}</span>
+            <span className="text">{story?.user?.lastName}</span>
           </div>
-          <Img src={`/uploads/${story.image}`} />
+          <Img src={story?.image} />
         </div>
       ) : (
         <div className="show-story-wrapper">
@@ -46,25 +46,25 @@ const Story = ({ story }) => {
               <Img
                 className="user-image"
                 src={
-                  story.user.profileImage
-                    ? `/uploads/${story.user.profileImage}`
+                  story?.user?.profileImage
+                    ? story?.user?.profileImage
                     : NoUserImage
                 }
               />
               <div className="details">
                 <p className="user-name">
-                  <Link to={`/profile/${story.user._id}`}>
-                    {story.user.firstName + " " + story.user.lastName}
+                  <Link to={`/profile/${story?.user._id}`}>
+                    {story?.user?.firstName + " " + story?.user?.lastName}
                   </Link>
                 </p>
-                <p className="moment">{moment(story.createdAt).fromNow()}</p>
+                <p className="moment">{moment(story?.createdAt).fromNow()}</p>
               </div>
             </div>
             <span className="close" onClick={() => setShowStory(false)}>
               ✖
             </span>
-            <Img className="view-story" src={`/uploads/${story.image}`} />
-            {currentUser._id === story.user._id && (
+            <Img className="view-story" src={story?.image} />
+            {currentUser?._id === story?.user?._id && (
               <button
                 className="delete"
                 onClick={() => deleteStoryMutation.mutate()}

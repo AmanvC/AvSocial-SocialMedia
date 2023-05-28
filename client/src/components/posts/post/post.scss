@@ -74,7 +74,7 @@
   .post-content {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 15px;
     .lazy-load-image-background {
       img {
         width: 100%;
@@ -147,7 +147,7 @@
     width: 100%;
     align-items: center;
     gap: 10px;
-    margin-top: 15px;
+    margin-top: 5px;
 
     @include sm {
       margin-top: 5px;

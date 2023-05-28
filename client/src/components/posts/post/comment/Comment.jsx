@@ -74,9 +74,7 @@ const Comment = ({ comment, currentUser, postId }) => {
       <div className="profile-image">
         <Img
           src={
-            comment.user.profileImage
-              ? `/uploads/${comment.user.profileImage}`
-              : NoUserImage
+            comment.user.profileImage ? comment.user.profileImage : NoUserImage
           }
         />
       </div>

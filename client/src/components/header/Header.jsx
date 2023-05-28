@@ -104,7 +104,7 @@ const Header = () => {
                               <Img
                                 src={
                                   result.profileImage
-                                    ? `/uploads/${result.profileImage}`
+                                    ? result.profileImage
                                     : NoUserImage
                                 }
                               />
@@ -150,7 +150,7 @@ const Header = () => {
             <img
               src={
                 currentUser.profileImage
-                  ? `/uploads/${currentUser.profileImage}`
+                  ? currentUser.profileImage
                   : NoUserImage
               }
               className="user-info"

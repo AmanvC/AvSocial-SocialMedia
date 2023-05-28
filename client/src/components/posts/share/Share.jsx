@@ -8,6 +8,7 @@ import Img from "../../lazyLoadImage/Img";
 const Share = ({ setTimestamp, updatePostsList }) => {
   const [file, setFile] = useState(null);
   const [postInput, setPostInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { currentUser } = useContext(AuthContext);
 
@@ -23,6 +24,7 @@ const Share = ({ setTimestamp, updatePostsList }) => {
   };
 
   const handleAddPost = (e) => {
+    setLoading(true);
     e.preventDefault();
     callAddPostAPI();
   };
@@ -41,7 +43,9 @@ const Share = ({ setTimestamp, updatePostsList }) => {
       setFile(null);
       setTimestamp(null);
       updatePostsList();
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       toast.error("Something went wrong while creating a new Post!");
     }
   };
@@ -74,7 +78,10 @@ const Share = ({ setTimestamp, updatePostsList }) => {
         <label htmlFor="file" className="add-image">
           Upload Image
         </label>
-        <button onClick={handleAddPost} disabled={!(postInput || file)}>
+        <button
+          onClick={handleAddPost}
+          disabled={!(postInput || file) || loading}
+        >
           Add Post
         </button>
       </div>

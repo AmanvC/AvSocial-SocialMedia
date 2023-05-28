@@ -10,6 +10,7 @@ import Img from "../lazyLoadImage/Img";
 
 const Stories = () => {
   const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
 
   const {
@@ -41,6 +42,7 @@ const Stories = () => {
 
   const handleUpload = async () => {
     try {
+      setLoading(true);
       const imgUrl = await upload();
       await makeRequest().post("/stories/create", {
         image: imgUrl,
@@ -48,12 +50,12 @@ const Stories = () => {
       setFile(null);
       queryClient.invalidateQueries(["stories"]);
       toast.success("Story Added Successfully.");
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       toast.error("Something went wrong, story cannot be added!");
     }
   };
-
-  console.log(error);
 
   if (error) {
     toast.error(error.response?.data?.message || "Something went wrong!");
@@ -81,7 +83,11 @@ const Stories = () => {
           <div className="form">
             <Img className="file" src={URL.createObjectURL(file)} />
             <div className="buttons">
-              <button className="upload" onClick={handleUpload}>
+              <button
+                className="upload"
+                onClick={handleUpload}
+                disabled={loading}
+              >
                 Upload
               </button>
               <button className="cancel" onClick={() => setFile(null)}>

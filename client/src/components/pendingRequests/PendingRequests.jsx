@@ -33,7 +33,6 @@ const PendingRequests = () => {
 
   const requestsMutation = useMutation(
     ([action, userId]) => {
-      console.log(action);
       if (action === "delete") {
         return makeRequest().delete("/relationship/delete", {
           data: { user_id: userId },
@@ -84,7 +83,7 @@ const PendingRequests = () => {
                 <Img
                   src={
                     request?.sentBy?.profileImage
-                      ? `/uploads/${request?.sentBy?.profileImage}`
+                      ? request?.sentBy?.profileImage
                       : NoUserImage
                   }
                   className="user-image"

@@ -104,19 +104,32 @@ const Profile = () => {
       if (uploadedProfileImage) {
         profileUrl = await upload(uploadedProfileImage);
       }
-      profileUrl = profileUrl ? profileUrl : userProfile.profileImage;
 
       let coverUrl = "";
       if (uploadedCoverImage) {
         coverUrl = await upload(uploadedCoverImage);
       }
-      coverUrl = coverUrl ? coverUrl : userProfile.coverImage;
 
-      const res = await makeRequest().patch("/profile/update", {
-        ...inputs,
-        coverImage: coverUrl,
-        profileImage: profileUrl,
-      });
+      let obj = {
+        firstName: inputs.firstName,
+        lastName: inputs.lastName,
+        email: inputs.email,
+        userId: userProfile._id,
+      };
+      if (coverUrl.length !== 0) {
+        obj = {
+          ...obj,
+          coverImage: coverUrl,
+        };
+      }
+      if (profileUrl.length !== 0) {
+        obj = {
+          ...obj,
+          profileImage: profileUrl,
+        };
+      }
+
+      const res = await makeRequest().patch("/profile/update", obj);
       setLoading(false);
       setUpdate(false);
       updateCurrentUser(res.data.token);
@@ -164,9 +177,7 @@ const Profile = () => {
             <Img
               className="cover-image"
               src={
-                userProfile.coverImage
-                  ? `/uploads/${userProfile.coverImage}`
-                  : NoCoverImage
+                userProfile.coverImage ? userProfile.coverImage : NoCoverImage
               }
               style={{ backgroundColor: "white" }}
             />
@@ -174,7 +185,7 @@ const Profile = () => {
               className="profile-image"
               src={
                 userProfile.profileImage
-                  ? `/uploads/${userProfile.profileImage}`
+                  ? userProfile.profileImage
                   : NoUserImage
               }
               style={{ backgroundColor: "white" }}
@@ -210,7 +221,14 @@ const Profile = () => {
         <div className="update-wrapper">
           <div className="update-container">
             <h1>Update Profile</h1>
-            <div className="close" onClick={() => setUpdate(false)}>
+            <div
+              className="close"
+              onClick={() => {
+                setUpdate(false);
+                setUploadedCoverImage(null);
+                setUploadedProfileImage(null);
+              }}
+            >
               ✖
             </div>
             <form onSubmit={handleUpdateProfile}>
@@ -263,7 +281,7 @@ const Profile = () => {
                     src={
                       uploadedProfileImage
                         ? URL.createObjectURL(uploadedProfileImage)
-                        : `/uploads/${userProfile.profileImage}`
+                        : userProfile.profileImage
                     }
                     style={{
                       lineHeight: 9,
@@ -289,7 +307,7 @@ const Profile = () => {
                     src={
                       uploadedCoverImage
                         ? URL.createObjectURL(uploadedCoverImage)
-                        : `/uploads/${userProfile.coverImage}`
+                        : userProfile.coverImage
                     }
                     style={{
                       lineHeight: 9,

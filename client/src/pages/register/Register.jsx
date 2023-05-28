@@ -51,7 +51,7 @@ const Register = () => {
     const passwordValidity = validator.isStrongPassword(e.target.value);
     setPasswordValid(passwordValidity);
     setInputs((prev) => ({ ...prev, password: e.target.value }));
-    if (e.target.value == "") {
+    if (e.target.value === "") {
       setPasswordValid(true);
     }
   };
