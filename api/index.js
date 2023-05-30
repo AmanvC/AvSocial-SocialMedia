@@ -31,7 +31,7 @@ app.post(
   upload.single("file"),
   async (req, res) => {
     const buffer = await sharp(req.file.buffer)
-      .resize({ height: 1080, width: 1080, fit: "contain" })
+      .resize({ height: 1080, width: 1080, fit: "cover" })
       .toBuffer();
     const imageName = await uploadFile(buffer);
     return res.status(200).json(imageName);
