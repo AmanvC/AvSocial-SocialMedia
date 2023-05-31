@@ -1,4 +1,5 @@
 const Message = require("../models/Message");
+const Chat = require("../models/Chat");
 
 module.exports.getAllMessages = async (req, res) => {
   try {
@@ -28,6 +29,9 @@ module.exports.createMessage = async (req, res) => {
       content,
       chat: chatId,
       sender: req.user._id,
+    });
+    await Chat.findByIdAndUpdate(chatId, {
+      latestMessage: newMessage.id,
     });
     const popMessage = await Message.findById(newMessage.id)
       .populate("sender", "firstName lastName profileImage")

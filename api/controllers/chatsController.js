@@ -88,9 +88,38 @@ module.exports.getAllChats = async (req, res) => {
       .populate("users", "-password")
       .populate("groupAdmins", "-password")
       .populate("latestMessage")
-      .populate("latestMessage.sender", "-password")
+      .populate({
+        path: "latestMessage",
+        populate: {
+          path: "sender",
+          select: { firstName: 1, lastName: 1 },
+        },
+      })
       .sort("-updatedAt")
       .sort("-createdAt");
+
+    let signedUrlDone = [];
+
+    for (const chat of allChats) {
+      for (const user of chat.users) {
+        if (signedUrlDone.indexOf(user.id) === -1) {
+          if (user.profileImage) {
+            const url = await getUrl(user.profileImage);
+            user.profileImage = url;
+            signedUrlDone.push(user.id);
+          }
+        }
+      }
+      for (const user of chat.groupAdmins) {
+        if (signedUrlDone.indexOf(user.id) === -1) {
+          if (user.profileImage) {
+            const url = await getUrl(user.profileImage);
+            user.profileImage = url;
+            signedUrlDone.push(user.id);
+          }
+        }
+      }
+    }
 
     return res.status(200).json({
       success: true,
