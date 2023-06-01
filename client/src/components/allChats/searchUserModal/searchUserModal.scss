@@ -1,0 +1,113 @@
+.search-user-modal {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1000;
+
+  .search-user-container {
+    background-color: white;
+    border-radius: 10px;
+    position: relative;
+    width: 500px;
+    margin-top: 80px;
+    padding: 20px;
+
+    .close {
+      font-size: 2.5em;
+      padding: 7px;
+      cursor: pointer;
+      border-radius: 5px;
+      position: absolute;
+      transition: background-color 0.3s ease;
+      top: 10px;
+      right: 10px;
+
+      &:hover {
+        background-color: rgba(231, 231, 231, 0.5);
+      }
+    }
+
+    h1 {
+      font-weight: 500;
+      font-size: 2.2em;
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    input {
+      width: 100%;
+      margin-top: 40px;
+      padding: 10px 20px;
+      font-size: 1.3em;
+      letter-spacing: 1px;
+      border-radius: 5px;
+      border: 1px solid lightgray;
+
+      &::placeholder {
+        color: lightgray;
+      }
+
+      &:focus {
+        border: 1px solid var(--theme-color);
+        outline: 1px solid var(--theme-color);
+      }
+    }
+
+    .searched-results {
+      margin-top: 20px;
+
+      .searched-user-card {
+        width: 100%;
+        padding: 10px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        background-color: #e8e8e8;
+        cursor: pointer;
+        border-radius: 10px;
+        margin-top: 10px;
+
+        &:hover {
+          background-color: var(--theme-hover-color);
+        }
+
+        .image {
+          display: flex;
+          align-items: center;
+
+          .lazy-load-image-background {
+            margin-top: 4px;
+
+            img {
+              height: 50px;
+              width: 50px;
+              border-radius: 50%;
+            }
+          }
+        }
+
+        .user-details {
+          .name {
+            font-weight: 600;
+            font-size: 1.2em;
+          }
+        }
+      }
+
+      .selected-user {
+        background-color: var(--theme-color);
+        color: white;
+
+        &:hover {
+          background-color: var(--theme-color);
+        }
+      }
+    }
+  }
+}
