@@ -8,6 +8,7 @@ import { ToastProvider } from "react-toast-notifications";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ChatContextProvider from "./context/chatContext";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient();
@@ -18,16 +19,18 @@ if (process.env.NODE_ENV === "production") {
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <ToastProvider>
-          <AuthContextProvider>
+  // <React.StrictMode>
+  <QueryClientProvider client={queryClient}>
+    <BrowserRouter>
+      <ToastProvider>
+        <AuthContextProvider>
+          <ChatContextProvider>
             <App />
-            {/* <ReactQueryDevtools /> */}
-          </AuthContextProvider>
-        </ToastProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
-  </React.StrictMode>
+          </ChatContextProvider>
+          {/* <ReactQueryDevtools /> */}
+        </AuthContextProvider>
+      </ToastProvider>
+    </BrowserRouter>
+  </QueryClientProvider>
+  // </React.StrictMode>
 );

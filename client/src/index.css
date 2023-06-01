@@ -18,6 +18,7 @@ body {
   /* font-weight: 500; */
 
   --theme-color: rgb(158, 64, 64);
+  --theme-hover-color: #e0d4d4;
   --font-color-light: #fff;
   --font-color-dark: #000;
 
