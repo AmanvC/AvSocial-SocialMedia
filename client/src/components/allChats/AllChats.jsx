@@ -8,7 +8,7 @@ import { AuthContext } from "../../context/authContext";
 import UserDetailsCard from "../userDetailsCard/UserDetailsCard";
 import Img from "../lazyLoadImage/Img";
 import NoUserImage from "../../assets/NoUserImage.png";
-import CreateGroupWrapper from "./createGroupWrapper/CreateGroupWrapper";
+import CreateGroupModal from "./createGroupModal/CreateGroupModal";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import SearchUserModal from "./searchUserModal/SearchUserModal";
@@ -57,15 +57,15 @@ const AllChats = () => {
         ))}
       </div>
       {showCreateGroup && (
-        <CreateGroupWrapper
+        <CreateGroupModal
           close={() => setShowCreateGroup(false)}
-          getAllChats={getAllChats}
+          setAllChats={setAllChats}
         />
       )}
       {showSearchUser && (
         <SearchUserModal
           close={() => setShowSearchUser(false)}
-          getAllChats={getAllChats}
+          setAllChats={setAllChats}
         />
       )}
     </div>

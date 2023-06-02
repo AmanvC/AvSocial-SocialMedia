@@ -8,7 +8,7 @@ import { toast } from "react-hot-toast";
 import Img from "../../lazyLoadImage/Img";
 import Spinner from "../../spinner/Spinner";
 
-const SearchUserModal = ({ close, getAllChats }) => {
+const SearchUserModal = ({ close, setAllChats }) => {
   const [searchInput, setSearchInput] = useState("");
   const [searchResultLoading, setSearchResultLoading] = useState(false);
   const [searchedResult, setSearchedResult] = useState([]);
@@ -42,7 +42,7 @@ const SearchUserModal = ({ close, getAllChats }) => {
         userId: user._id,
       });
       setSelectedChat(res?.data?.data);
-      getAllChats();
+      setAllChats((prev) => [res?.data?.data, ...prev]);
       setLoading(false);
       close();
     } catch (err) {

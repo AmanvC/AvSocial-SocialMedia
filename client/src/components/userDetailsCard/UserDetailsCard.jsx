@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import "./userDetailsCard.scss";
 import { ChatContext } from "../../context/chatContext";
 import { getSenderDetails, getSenderName } from "../../utils/chatLogic";
+import GroupImage from "../../assets/group.png";
 import NoUserImage from "../../assets/NoUserImage.png";
 import { AuthContext } from "../../context/authContext";
 import Img from "../lazyLoadImage/Img";
@@ -21,7 +22,7 @@ const UserDetailsCard = ({ chat }) => {
         <Img
           src={
             chat?.isGroupChat
-              ? chat?.profileImage || NoUserImage
+              ? chat?.profileImage || GroupImage
               : getSenderDetails(currentUser, chat.users)?.profileImage ||
                 NoUserImage
           }

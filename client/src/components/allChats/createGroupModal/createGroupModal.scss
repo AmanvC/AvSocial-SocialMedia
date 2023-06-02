@@ -1,0 +1,106 @@
+.create-group-wrapper {
+  position: absolute;
+  z-index: 1000;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  .create-group-container {
+    background-color: white;
+    border-radius: 10px;
+    position: relative;
+    width: 500px;
+    margin-top: 80px;
+    padding: 20px;
+
+    .close {
+      font-size: 2.5em;
+      padding: 7px;
+      cursor: pointer;
+      border-radius: 5px;
+      position: absolute;
+      transition: background-color 0.3s ease;
+      top: 10px;
+      right: 10px;
+
+      &:hover {
+        background-color: rgba(231, 231, 231, 0.5);
+      }
+    }
+
+    h1 {
+      font-weight: 500;
+      font-size: 2.2em;
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      gap: 25px;
+      margin-top: 25px;
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+
+        label {
+          font-weight: 500;
+        }
+
+        input {
+          padding: 10px;
+          border-radius: 5px;
+          border: 1px solid lightgray;
+          font-size: 1.1em;
+          letter-spacing: 1px;
+
+          &:focus {
+            outline: 1px solid var(--theme-color);
+            border: 1px solid var(--theme-color);
+          }
+
+          &::placeholder {
+            opacity: 0.4;
+          }
+        }
+      }
+
+      .selected-users-badge {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+
+      input[type="submit"] {
+        position: relative;
+        align-self: flex-end;
+        margin-bottom: 10px;
+        padding: 10px;
+        font-size: 1.1em;
+        background-color: var(--theme-color);
+        color: white;
+        border-radius: 5px;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0px 0px 5px gray;
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
