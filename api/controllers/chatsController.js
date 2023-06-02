@@ -20,7 +20,7 @@ module.exports.createOrGet = async (req, res) => {
     if (currentChat.length > 0) {
       return res.status(200).json({
         success: true,
-        data: currentChat,
+        data: currentChat[0],
       });
     }
     const newChat = await Chat.create({
