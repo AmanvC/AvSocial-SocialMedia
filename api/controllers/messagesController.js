@@ -1,6 +1,8 @@
 const Message = require("../models/Message");
 const Chat = require("../models/Chat");
 
+const { getUrl } = require("../config/s3");
+
 module.exports.getAllMessages = async (req, res) => {
   try {
     const { chatId } = req.params;
@@ -9,6 +11,18 @@ module.exports.getAllMessages = async (req, res) => {
     })
       .populate("sender", "firstName lastName profileImage")
       .populate("chat");
+
+    let signedUrlDone = [];
+
+    for (const m of messages) {
+      if (m.sender.profileImage) {
+        if (signedUrlDone.indexOf(m.sender.id) === -1) {
+          const url = await getUrl(m.sender.profileImage);
+          m.sender.profileImage = url;
+          signedUrlDone.push(m.sender.id);
+        }
+      }
+    }
     return res.status(200).json({
       success: true,
       data: messages,
@@ -35,7 +49,28 @@ module.exports.createMessage = async (req, res) => {
     });
     const popMessage = await Message.findById(newMessage.id)
       .populate("sender", "firstName lastName profileImage")
-      .populate("chat");
+      .populate({
+        path: "chat",
+        populate: {
+          path: "latestMessage",
+          populate: {
+            path: "sender",
+          },
+        },
+      })
+      .populate({
+        path: "chat",
+        populate: {
+          path: "users",
+          select: { firstName: 1, lastName: 1, profileImage: 1 },
+        },
+      });
+    for (const user of popMessage.chat.users) {
+      if (user.profileImage) {
+        const url = await getUrl(user.profileImage);
+        user.profileImage = url;
+      }
+    }
     return res.status(200).json({
       success: true,
       data: popMessage,

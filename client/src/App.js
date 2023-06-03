@@ -15,6 +15,7 @@ import RightBar from "./components/rightBar/RightBar";
 import ContentWrapper from "./components/contentWrapper/ContentWrapper";
 import Profile from "./pages/profile/Profile";
 import Loader from "./components/loader/Loader";
+import Chats from "./pages/chats/Chats";
 
 function App() {
   const { currentUser, loading } = useContext(AuthContext);
@@ -66,6 +67,14 @@ function App() {
               <Layout>
                 <Profile />
               </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chats"
+          element={
+            <ProtectedRoute>
+              <Chats />
             </ProtectedRoute>
           }
         />
