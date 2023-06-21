@@ -59,6 +59,7 @@ const AllChats = () => {
       {showSearchUser && (
         <SearchUserModal
           close={() => setShowSearchUser(false)}
+          allChats={allChats}
           setAllChats={setAllChats}
         />
       )}

@@ -8,7 +8,7 @@ import { toast } from "react-hot-toast";
 import Img from "../../lazyLoadImage/Img";
 import Spinner from "../../spinner/Spinner";
 
-const SearchUserModal = ({ close, setAllChats }) => {
+const SearchUserModal = ({ close, setAllChats, allChats }) => {
   const [searchInput, setSearchInput] = useState("");
   const [searchResultLoading, setSearchResultLoading] = useState(false);
   const [searchedResult, setSearchedResult] = useState([]);
@@ -41,8 +41,20 @@ const SearchUserModal = ({ close, setAllChats }) => {
       const res = await makeRequest().post("/chats/create-or-get", {
         userId: user._id,
       });
-      setSelectedChat(res?.data?.data);
-      setAllChats((prev) => [res?.data?.data, ...prev]);
+      const searchedChat = allChats.filter(
+        (chat) => chat._id === res?.data?.data._id
+      );
+      if (!searchedChat[0]) {
+        console.log("INSIDE");
+        setAllChats((prev) => [res?.data?.data, ...prev]);
+        setSelectedChat(res?.data?.data);
+      } else {
+        const remChats = allChats.filter(
+          (chat) => chat._id !== res?.data?.data._id
+        );
+        setSelectedChat(searchedChat[0]);
+        setAllChats([searchedChat[0], ...remChats]);
+      }
       setLoading(false);
       close();
     } catch (err) {
