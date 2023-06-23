@@ -10,17 +10,25 @@ module.exports.createOrGet = async (req, res) => {
         message: "User ID missing!",
       });
     }
-    const currentChat = await Chat.find({
+    const currentChat = await Chat.findOne({
       isGroupChat: false,
       users: { $all: [req.user._id, userId] },
     })
-      .populate("users", "-password")
+      .populate("users", "firstName lastName email")
       .populate("latestMessage")
-      .populate("latestMessage.sender", "-password");
-    if (currentChat.length > 0) {
+      // .populate("latestMessage.sender", "-password");
+      .populate({
+        path: "latestMessage",
+        populate: {
+          path: "sender",
+          select: { firstName: 1, lastName: 1, email: 1 },
+        },
+      });
+    console.log(currentChat);
+    if (currentChat) {
       return res.status(200).json({
         success: true,
-        data: currentChat[0],
+        data: currentChat,
       });
     }
     const newChat = await Chat.create({
@@ -198,7 +206,14 @@ module.exports.addUser = async (req, res) => {
       .populate("users", "-password")
       .populate("groupAdmins", "-password")
       .populate("latestMessage")
-      .populate("latestMessage.sender", "-password");
+      .populate({
+        path: "latestMessage",
+        populate: {
+          path: "sender",
+          select: [{ firstName: 1, lastName: 1, email: 1 }],
+        },
+      });
+    // .populate("latestMessage.sender", "-password");
     return res.status(200).json({
       success: true,
       message: "User added to the group.",
@@ -233,7 +248,14 @@ module.exports.removeUser = async (req, res) => {
       .populate("users", "-password")
       .populate("groupAdmins", "-password")
       .populate("latestMessage")
-      .populate("latestMessage.sender", "-password");
+      .populate({
+        path: "latestMessage",
+        populate: {
+          path: "sender",
+          select: [{ firstName: 1, lastName: 1, email: 1 }],
+        },
+      });
+    // .populate("latestMessage.sender", "-password");
 
     return res.status(200).json({
       success: true,
@@ -291,7 +313,14 @@ module.exports.addAdmin = async (req, res) => {
       .populate("users", "-password")
       .populate("groupAdmins", "-password")
       .populate("latestMessage")
-      .populate("latestMessage.sender", "-password");
+      .populate({
+        path: "latestMessage",
+        populate: {
+          path: "sender",
+          select: [{ firstName: 1, lastName: 1, email: 1 }],
+        },
+      });
+    // .populate("latestMessage.sender", "-password");
     return res.status(200).json({
       success: true,
       data: updatedChat,
@@ -325,6 +354,13 @@ module.exports.removeAdmin = async (req, res) => {
       .populate("users", "-password")
       .populate("groupAdmins", "-password")
       .populate("latestMessage")
+      .populate({
+        path: "latestMessage",
+        populate: {
+          path: "sender",
+          select: [{ firstName: 1, lastName: 1, email: 1 }],
+        },
+      })
       .populate("latestMessage.sender", "-password");
 
     return res.status(200).json({
