@@ -14,6 +14,7 @@ const CreateGroupWrapper = ({ close, setAllChats }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [searchUserLoading, setSearchUserLoading] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [groupNameError, setGroupNameError] = useState(false);
 
   const { setSelectedChat } = useContext(ChatContext);
 
@@ -79,6 +80,15 @@ const CreateGroupWrapper = ({ close, setAllChats }) => {
     toast.success("User removed successfully.");
   };
 
+  const handleGroupChatName = (e) => {
+    if (e.target.value.length > 20) {
+      setGroupNameError(true);
+    } else {
+      setGroupNameError(false);
+    }
+    setGroupName(e.target.value);
+  };
+
   return (
     <div className="create-group-wrapper">
       <div className="create-group-container">
@@ -93,9 +103,14 @@ const CreateGroupWrapper = ({ close, setAllChats }) => {
               type="text"
               id="chatName"
               value={groupName}
-              onChange={(e) => setGroupName(e.target.value)}
+              onChange={handleGroupChatName}
               placeholder="Group Chat Name"
             />
+            {groupNameError && (
+              <small style={{ color: "red" }}>
+                *Group name cannot contain more than 20 characters.
+              </small>
+            )}
           </div>
           <div className="field">
             <label htmlFor="users">
@@ -137,7 +152,12 @@ const CreateGroupWrapper = ({ close, setAllChats }) => {
           </div>
           <input
             type="submit"
-            disabled={!groupName || selectedUsers.length < 2 || loading}
+            disabled={
+              !groupName ||
+              selectedUsers.length < 2 ||
+              loading ||
+              groupNameError
+            }
             value={loading ? "Creating Group..." : "Create Group"}
           />
         </form>
