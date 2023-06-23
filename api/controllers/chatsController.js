@@ -210,7 +210,7 @@ module.exports.addUser = async (req, res) => {
         path: "latestMessage",
         populate: {
           path: "sender",
-          select: [{ firstName: 1, lastName: 1, email: 1 }],
+          select: { firstName: 1, lastName: 1, email: 1 },
         },
       });
     // .populate("latestMessage.sender", "-password");
@@ -252,7 +252,7 @@ module.exports.removeUser = async (req, res) => {
         path: "latestMessage",
         populate: {
           path: "sender",
-          select: [{ firstName: 1, lastName: 1, email: 1 }],
+          select: { firstName: 1, lastName: 1, email: 1 },
         },
       });
     // .populate("latestMessage.sender", "-password");
@@ -317,7 +317,7 @@ module.exports.addAdmin = async (req, res) => {
         path: "latestMessage",
         populate: {
           path: "sender",
-          select: [{ firstName: 1, lastName: 1, email: 1 }],
+          select: { firstName: 1, lastName: 1, email: 1 },
         },
       });
     // .populate("latestMessage.sender", "-password");
@@ -358,7 +358,7 @@ module.exports.removeAdmin = async (req, res) => {
         path: "latestMessage",
         populate: {
           path: "sender",
-          select: [{ firstName: 1, lastName: 1, email: 1 }],
+          select: { firstName: 1, lastName: 1, email: 1 },
         },
       })
       .populate("latestMessage.sender", "-password");

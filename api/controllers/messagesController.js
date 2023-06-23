@@ -48,13 +48,14 @@ module.exports.createMessage = async (req, res) => {
       latestMessage: newMessage.id,
     });
     const popMessage = await Message.findById(newMessage.id)
-      .populate("sender", "firstName lastName profileImage")
+      .populate("sender", "firstName lastName profileImage email")
       .populate({
         path: "chat",
         populate: {
           path: "latestMessage",
           populate: {
             path: "sender",
+            select: { firstName: 1, lastName: 1, email: 1 },
           },
         },
       })
