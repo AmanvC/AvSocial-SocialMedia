@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./createGroupModal.scss";
 import { MdClose } from "react-icons/md";
 import { toast } from "react-hot-toast";
@@ -6,6 +6,7 @@ import { makeRequest } from "../../../axios";
 import SearchedUserCard from "../../searchedUserCard/SearchedUserCard";
 import UserBadge from "./userBadge/UserBadge";
 import { ChatContext } from "../../../context/chatContext";
+import useDebounce from "../../../hooks/useDebounce";
 
 const CreateGroupWrapper = ({ close, setAllChats }) => {
   const [groupName, setGroupName] = useState("");
@@ -15,6 +16,8 @@ const CreateGroupWrapper = ({ close, setAllChats }) => {
   const [searchUserLoading, setSearchUserLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [groupNameError, setGroupNameError] = useState(false);
+
+  const debouncedValue = useDebounce(searchInput);
 
   const { setSelectedChat } = useContext(ChatContext);
 
@@ -45,15 +48,15 @@ const CreateGroupWrapper = ({ close, setAllChats }) => {
     }
   };
 
-  const handleSearchUser = async (e) => {
+  const handleSearchUser = async () => {
     try {
-      if (searchInput.length < 1) {
+      if (debouncedValue.length < 1) {
         setSearchedUserResults([]);
         return;
       }
       setSearchUserLoading(true);
       const res = await makeRequest().get(
-        `/profile/search/user?username=${searchInput}`
+        `/profile/search/user?username=${debouncedValue}`
       );
       console.log(res);
       setSearchUserLoading(false);
@@ -63,6 +66,10 @@ const CreateGroupWrapper = ({ close, setAllChats }) => {
       toast.error(err.response?.data?.message || "Something went wrong!");
     }
   };
+
+  useEffect(() => {
+    handleSearchUser();
+  }, [debouncedValue]);
 
   const handleAddUserToGroup = (user) => {
     for (const u of selectedUsers) {
@@ -121,7 +128,7 @@ const CreateGroupWrapper = ({ close, setAllChats }) => {
               id="users"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              onKeyUp={handleSearchUser}
+              // onKeyUp={handleSearchUser}
               placeholder="Select atleast 2 users"
             />
           </div>

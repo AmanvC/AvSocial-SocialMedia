@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./searchUserModal.scss";
 import { MdClose } from "react-icons/md";
 import { ChatContext } from "../../../context/chatContext";
@@ -7,6 +7,7 @@ import { makeRequest } from "../../../axios";
 import { toast } from "react-hot-toast";
 import Img from "../../lazyLoadImage/Img";
 import Spinner from "../../spinner/Spinner";
+import useDebounce from "../../../hooks/useDebounce";
 
 const SearchUserModal = ({ close, setAllChats, allChats }) => {
   const [searchInput, setSearchInput] = useState("");
@@ -15,17 +16,19 @@ const SearchUserModal = ({ close, setAllChats, allChats }) => {
 
   const [loading, setLoading] = useState(false);
 
+  const debouncedValue = useDebounce(searchInput);
+
   const { setSelectedChat } = useContext(ChatContext);
 
   const handleSearchUser = async () => {
     try {
-      if (searchInput.length < 1) {
+      if (debouncedValue.length < 1) {
         setSearchedResult([]);
         return;
       }
       setSearchResultLoading(true);
       const res = await makeRequest().get(
-        `/profile/search/user?username=${searchInput}`
+        `/profile/search/user?username=${debouncedValue}`
       );
       setSearchedResult(res?.data?.data);
       setSearchResultLoading(false);
@@ -34,6 +37,10 @@ const SearchUserModal = ({ close, setAllChats, allChats }) => {
       toast.error("Something went wrong, cannot search for user!");
     }
   };
+
+  useEffect(() => {
+    handleSearchUser();
+  }, [debouncedValue]);
 
   const handleClick = async (user) => {
     try {
@@ -74,7 +81,7 @@ const SearchUserModal = ({ close, setAllChats, allChats }) => {
           placeholder="Search friends..."
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
-          onKeyUp={handleSearchUser}
+          // onKeyUp={handleSearchUser}
           autoFocus
         />
         {searchedResult.length > 0 && (

@@ -3,7 +3,7 @@ import ContentWrapper from "../contentWrapper/ContentWrapper";
 import { AuthContext } from "../../context/authContext";
 import NoUserImage from "../../assets/NoUserImage.png";
 
-import { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useEffect, useState, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { AiOutlineUser } from "react-icons/ai";
@@ -15,6 +15,7 @@ import { RiContactsBook2Fill } from "react-icons/ri";
 import { makeRequest } from "../../axios";
 import PendingRequests from "../pendingRequests/PendingRequests";
 import Img from "../lazyLoadImage/Img";
+import useDebounce from "../../hooks/useDebounce";
 
 const Header = () => {
   const { currentUser, logout } = useContext(AuthContext);
@@ -25,6 +26,8 @@ const Header = () => {
   const [searchedResult, setSearchedResult] = useState([]);
   const [showFriendRequests, setShowFriendRequests] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const debouncedValue = useDebounce(searchInput);
 
   const handleLogoutClick = () => {
     logout();
@@ -52,11 +55,11 @@ const Header = () => {
   OutsideClick(resultRef, setShowResultContainer);
   OutsideClick(friendRequestsRef, setShowFriendRequests);
 
-  const handleSearchUser = async (e) => {
-    if (searchInput.length > 2) {
+  const handleSearchUser = async () => {
+    if (debouncedValue?.length > 2) {
       setLoading(true);
       const res = await makeRequest().get(
-        `/profile/search/user?username=${searchInput}`
+        `/profile/search/user?username=${debouncedValue}`
       );
       setSearchedResult(res.data.data);
       setLoading(false);
@@ -64,6 +67,10 @@ const Header = () => {
       setSearchedResult([]);
     }
   };
+
+  useEffect(() => {
+    handleSearchUser();
+  }, [debouncedValue]);
 
   return (
     <div className="header">
@@ -80,7 +87,7 @@ const Header = () => {
             type="text"
             placeholder="Search user..."
             onChange={(e) => setSearchInput(e.target.value)}
-            onKeyUp={handleSearchUser}
+            // onKeyUp={handleSearchUser}
             value={searchInput}
             onClick={() => setShowResultContainer(true)}
           />
