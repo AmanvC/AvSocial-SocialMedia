@@ -13,3 +13,7 @@ export const isSameSender = (messages, index) => {
     messages[index].sender._id === messages[index - 1].sender._id
   );
 };
+
+export const isGroupAdmin = (currentUser, allUsers) => {
+  return allUsers.filter((user) => user._id === currentUser._id).length !== 0;
+};
