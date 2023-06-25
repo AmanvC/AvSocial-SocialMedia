@@ -4,14 +4,22 @@ import {
   removeItemFromLocalStorage,
   setItemInLocalStorage,
 } from "../utils";
-import { LOCALSTORAGE_TOKEN_KEY } from "../utils/constants";
+import {
+  LOCALSTORAGE_TOKEN_KEY,
+  PRODUCTION,
+  SOCKET_LOCAL,
+  SOCKET_PRODUCTION,
+} from "../utils/constants";
 import { makeRequest } from "../axios";
 import jwt from "jwt-decode";
 
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
 
 export const AuthContext = createContext(null);
+const ENDPOINT = PRODUCTION ? SOCKET_PRODUCTION : SOCKET_LOCAL;
+let socket = io(ENDPOINT);
 
 export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -22,10 +30,16 @@ export const AuthContextProvider = ({ children }) => {
     const userToken = getItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
     if (userToken) {
       let user = jwt(userToken);
+      socket.emit("setup", user);
       setCurrentUser(user);
     }
     setLoading(false);
   }, []);
+
+  // useEffect(() => {
+  //   socket = io(ENDPOINT);
+  //   socket.emit("setup", currentUser);
+  // }, []);
 
   const login = async (email, password) => {
     try {
@@ -42,6 +56,7 @@ export const AuthContextProvider = ({ children }) => {
       setItemInLocalStorage(LOCALSTORAGE_TOKEN_KEY, res.data.token);
       setCurrentUser(jwt(res.data.token));
       navigate("/");
+      socket.emit("setup", jwt(res.data.token));
       toast.success("Logged in successfully.");
     } catch (err) {
       toast.error(err.response.data.message || "Internal server error!");
@@ -60,7 +75,7 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ currentUser, login, logout, updateCurrentUser, loading }}
+      value={{ currentUser, login, logout, updateCurrentUser, loading, socket }}
     >
       {children}
     </AuthContext.Provider>

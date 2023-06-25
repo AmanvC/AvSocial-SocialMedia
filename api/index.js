@@ -42,10 +42,44 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/", require("./routes"));
 
-app.listen(port, (err) => {
+const server = app.listen(port, (err) => {
   if (err) {
     console.log(`Error in starting the express server: ${err}`);
     return;
   }
   console.log(`Server is running on port: ${port}`);
+});
+
+const io = require("socket.io")(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: process.env.CLIENT_URL,
+  },
+});
+
+let connectedUsers = [];
+
+io.on("connection", (socket) => {
+  socket.on("setup", (userData) => {
+    socket.join(userData._id);
+    socket.emit("connected");
+    console.log("User connected", userData._id);
+    connectedUsers.push(userData._id);
+    connectedUsers = Array.from(new Set(connectedUsers));
+    console.log(connectedUsers);
+  });
+
+  socket.on("join chat", (room) => {
+    socket.join(room);
+    console.log("User joined room: " + room);
+  });
+
+  socket.on("new message", (newMessageReceived) => {
+    const chat = newMessageReceived.chat;
+    if (!chat.users) return console.log("chat.users is not defined.");
+    chat.users.forEach((user) => {
+      if (user._id === newMessageReceived.sender._id) return;
+      socket.in(user._id).emit("message received", newMessageReceived);
+    });
+  });
 });

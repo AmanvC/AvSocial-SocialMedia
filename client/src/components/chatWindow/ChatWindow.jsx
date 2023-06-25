@@ -10,6 +10,15 @@ import { makeRequest } from "../../axios";
 import Spinner from "../spinner/Spinner";
 import Img from "../lazyLoadImage/Img";
 import NoUserImage from "../../assets/NoUserImage.png";
+// import {
+//   PRODUCTION,
+//   SOCKET_LOCAL,
+//   SOCKET_PRODUCTION,
+// } from "../../utils/constants";
+// import io from "socket.io-client";
+
+// const ENDPOINT = PRODUCTION ? SOCKET_PRODUCTION : SOCKET_LOCAL;
+let selectedChatCompare;
 
 const ChatWindow = () => {
   const [showChatInfo, setShowChatInfo] = useState(false);
@@ -17,8 +26,10 @@ const ChatWindow = () => {
   const [allMessages, setAllMessages] = useState([]);
   const [chatLoading, setChatLoading] = useState(false);
 
+  // const [socketConnected, setSocketConnected] = useState(false);
+
   const { selectedChat, setAllChats, allChats } = useContext(ChatContext);
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, socket } = useContext(AuthContext);
 
   const bottomRef = useRef(null);
 
@@ -29,15 +40,36 @@ const ChatWindow = () => {
   useEffect(() => {
     if (selectedChat) {
       getAllMessages();
+      selectedChatCompare = selectedChat;
     }
   }, [selectedChat]);
+
+  // useEffect(() => {
+  //   socket = io(ENDPOINT);
+  //   socket.emit("setup", currentUser);
+  //   socket.on("connected", () => setSocketConnected(true));
+  // }, []);
+
+  useEffect(() => {
+    socket.on("message received", (newMessageReceived) => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessageReceived.chat._id
+      ) {
+        // give notification
+      } else {
+        setAllMessages([...allMessages, newMessageReceived]);
+      }
+    });
+  });
 
   const getAllMessages = async () => {
     try {
       setChatLoading(true);
-      const res = await makeRequest().get(`/messages/${selectedChat?._id}`);
+      const res = await makeRequest().get(`/messages/${selectedChat._id}`);
       setAllMessages(res?.data?.data);
       setChatLoading(false);
+      socket.emit("join chat", selectedChat._id);
     } catch (err) {
       setChatLoading(false);
       console.log(err);
@@ -62,6 +94,7 @@ const ChatWindow = () => {
             (chat) => chat._id !== selectedChat._id
           );
           setAllChats([res.data?.data?.chat, ...remChats]);
+          socket.emit("new message", res.data.data);
         }
       } catch (err) {
         console.log(err);

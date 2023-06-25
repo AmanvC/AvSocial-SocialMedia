@@ -8,6 +8,16 @@ import CreateGroupModal from "./createGroupModal/CreateGroupModal";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import SearchUserModal from "./searchUserModal/SearchUserModal";
+// import io from "socket.io-client";
+// import {
+//   PRODUCTION,
+//   SOCKET_LOCAL,
+//   SOCKET_PRODUCTION,
+// } from "../../utils/constants";
+import { AuthContext } from "../../context/authContext";
+
+// const ENDPOINT = PRODUCTION ? SOCKET_PRODUCTION : SOCKET_LOCAL;
+// let socket;
 
 const AllChats = () => {
   const [chatsLoading, setChatsLoading] = useState(false);
@@ -15,10 +25,25 @@ const AllChats = () => {
   const [showSearchUser, setShowSearchUser] = useState(false);
 
   const { allChats, setAllChats } = useContext(ChatContext);
+  const { currentUser, socket } = useContext(AuthContext);
 
   useEffect(() => {
     getAllChats();
   }, []);
+
+  // useEffect(() => {
+  //   socket = io(ENDPOINT);
+  //   socket.emit("setup", currentUser);
+  // }, []);
+
+  useEffect(() => {
+    socket.on("message received", (newMessageReceived) => {
+      const remChats = allChats.filter(
+        (chat) => chat._id !== newMessageReceived.chat._id
+      );
+      setAllChats([newMessageReceived.chat, ...remChats]);
+    });
+  });
 
   const getAllChats = async () => {
     try {
