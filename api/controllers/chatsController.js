@@ -24,7 +24,6 @@ module.exports.createOrGet = async (req, res) => {
           select: { firstName: 1, lastName: 1, email: 1 },
         },
       });
-    console.log(currentChat);
     if (currentChat) {
       return res.status(200).json({
         success: true,
@@ -220,7 +219,7 @@ module.exports.addUser = async (req, res) => {
       data: updatedChat,
     });
   } catch (err) {
-    console.log(err);
+    console.log("ERROR IN ADD USER", err);
     return res.status(500).json({
       success: false,
       message: "Internal server error!",
@@ -263,7 +262,7 @@ module.exports.removeUser = async (req, res) => {
       data: updatedChat,
     });
   } catch (err) {
-    console.log(err);
+    console.log("ERROR IN REMOVE USER", err);
     return res.status(500).json({
       success: false,
       message: "Internal server error!",
@@ -326,7 +325,7 @@ module.exports.addAdmin = async (req, res) => {
       data: updatedChat,
     });
   } catch (err) {
-    console.log(err);
+    console.log("ERROR IN ADD ADMIN", err);
     return res.status(500).json({
       success: false,
       message: "Internal server error!",
@@ -369,7 +368,7 @@ module.exports.removeAdmin = async (req, res) => {
       data: updatedChat,
     });
   } catch (err) {
-    console.log(err);
+    console.log("ERROR IN REMOVE ADMIN", err);
     return res.status(500).json({
       success: false,
       message: "Internal server error!",
