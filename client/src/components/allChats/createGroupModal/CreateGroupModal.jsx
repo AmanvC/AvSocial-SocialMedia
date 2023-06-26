@@ -88,7 +88,7 @@ const CreateGroupWrapper = ({ close, setAllChats }) => {
   };
 
   const handleGroupChatName = (e) => {
-    if (e.target.value.length > 20) {
+    if (e.target.value.length > 15) {
       setGroupNameError(true);
     } else {
       setGroupNameError(false);
@@ -115,7 +115,7 @@ const CreateGroupWrapper = ({ close, setAllChats }) => {
             />
             {groupNameError && (
               <small style={{ color: "red" }}>
-                *Group name cannot contain more than 20 characters.
+                *Group name cannot exceed 15 characters.
               </small>
             )}
           </div>

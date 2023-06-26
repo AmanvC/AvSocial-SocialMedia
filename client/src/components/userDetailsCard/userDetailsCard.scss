@@ -1,3 +1,5 @@
+@import "../../mixins.scss";
+
 .user-details-card {
   padding: 10px;
   border-radius: 10px;
@@ -25,6 +27,11 @@
         height: 50px;
         width: 50px;
         border-radius: 50%;
+
+        @include sm {
+          height: 40px;
+          width: 40px;
+        }
       }
     }
   }
@@ -34,14 +41,23 @@
     overflow: hidden;
 
     .chat-name {
-      font-size: 1.2em;
+      font-size: 1.2rem;
+
+      @include sm {
+        font-size: 1rem;
+      }
     }
 
     .latest-message {
-      font-size: 0.9em;
+      font-size: 0.9rem;
       font-weight: normal;
       white-space: nowrap;
       text-overflow: ellipsis;
+      opacity: 0.5;
+
+      @include sm {
+        font-size: 0.8rem;
+      }
     }
   }
 }

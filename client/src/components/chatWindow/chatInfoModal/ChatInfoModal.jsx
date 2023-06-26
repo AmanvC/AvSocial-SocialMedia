@@ -10,7 +10,7 @@ import { AuthContext } from "../../../context/authContext";
 const ChatInfoModal = ({ close }) => {
   const { selectedChat } = useContext(ChatContext);
   const { currentUser } = useContext(AuthContext);
-  console.log(selectedChat);
+
   return (
     <div className="chat-info-modal">
       <div className="chat-info-container">

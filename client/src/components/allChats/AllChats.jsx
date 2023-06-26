@@ -24,7 +24,7 @@ const AllChats = () => {
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [showSearchUser, setShowSearchUser] = useState(false);
 
-  const { allChats, setAllChats } = useContext(ChatContext);
+  const { allChats, setAllChats, selectedChat } = useContext(ChatContext);
   const { currentUser, socket } = useContext(AuthContext);
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const AllChats = () => {
   };
 
   return (
-    <div className="all-chats">
+    <div className={selectedChat ? "all-chats hidden" : "all-chats"}>
       <div className="heading">
         <h2>All Chats</h2>
         <div className="options">

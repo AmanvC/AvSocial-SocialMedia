@@ -4,6 +4,7 @@ import { ChatContext } from "../../context/chatContext";
 import { getSenderName, isSameSender } from "../../utils/chatLogic";
 import { AuthContext } from "../../context/authContext";
 import { CgMoreR } from "react-icons/cg";
+import { BiArrowBack } from "react-icons/bi";
 import ChatInfoModal from "./chatInfoModal/ChatInfoModal";
 import { toast } from "react-hot-toast";
 import { makeRequest } from "../../axios";
@@ -28,7 +29,8 @@ const ChatWindow = () => {
 
   // const [socketConnected, setSocketConnected] = useState(false);
 
-  const { selectedChat, setAllChats, allChats } = useContext(ChatContext);
+  const { selectedChat, setAllChats, allChats, setSelectedChat } =
+    useContext(ChatContext);
   const { currentUser, socket } = useContext(AuthContext);
 
   const bottomRef = useRef(null);
@@ -103,12 +105,15 @@ const ChatWindow = () => {
   };
 
   return (
-    <div className="chat-window">
+    <div className={selectedChat ? "chat-window" : "chat-window hidden"}>
       {!selectedChat ? (
         <h1>Select a chat to continue!</h1>
       ) : (
         <div className="chat-screen">
           <div className="heading">
+            <div className="back" onClick={() => setSelectedChat(null)}>
+              <BiArrowBack />
+            </div>
             <h2>
               {selectedChat.isGroupChat
                 ? selectedChat.chatName.charAt(0).toUpperCase() +
@@ -143,9 +148,11 @@ const ChatWindow = () => {
                               <Img
                                 src={message.sender.profileImage || NoUserImage}
                               />
-                              {message.sender.firstName +
-                                " " +
-                                message.sender.lastName}
+                              <span>
+                                {message.sender.firstName +
+                                  " " +
+                                  message.sender.lastName}
+                              </span>
                             </div>
                           </div>
                         )}

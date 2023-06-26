@@ -1,10 +1,17 @@
+@import "../../mixins.scss";
+
 .chat-window {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
+  flex: 1;
+
+  @include sm {
+    margin: 10px;
+  }
 
   h1 {
-    font-size: 2em;
+    font-size: 2rem;
     opacity: 0.2;
   }
 
@@ -22,9 +29,33 @@
       justify-content: space-between;
       align-items: center;
 
+      @include md {
+        padding: 0;
+        padding-bottom: 5px;
+      }
+
+      .back {
+        display: none;
+
+        @include md {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 1.5rem;
+          cursor: pointer;
+        }
+        @include sm {
+          font-size: 1rem;
+        }
+      }
+
       h2 {
-        font-size: 2em;
+        font-size: 2rem;
         font-weight: 400;
+
+        @include sm {
+          font-size: 1.5rem;
+        }
       }
 
       .info {
@@ -60,11 +91,16 @@
         flex-direction: column;
         gap: 5px;
 
+        @include sm {
+          padding: 0;
+        }
+
         .sender-info {
           display: flex;
           align-items: center;
           gap: 5px;
           font-size: 14px;
+          margin-top: 5px;
 
           .lazy-load-image-background {
             margin-top: 4px;
@@ -73,6 +109,17 @@
               height: 25px;
               width: 25px;
               border-radius: 50%;
+
+              @include sm {
+                height: 20px;
+                width: 20px;
+              }
+            }
+          }
+
+          span {
+            @include sm {
+              font-size: 0.8rem;
             }
           }
         }
@@ -80,8 +127,18 @@
         .message {
           border-radius: 10px;
           padding: 5px 10px;
-          max-width: 50%;
+          max-width: 70%;
           overflow-wrap: break-word;
+
+          @include sm {
+            font-size: 0.9rem;
+          }
+        }
+
+        > p {
+          @include sm {
+            font-size: 0.8rem;
+          }
         }
 
         .current-sender {
@@ -97,7 +154,7 @@
       }
 
       input {
-        font-size: 1.1em;
+        font-size: 1.1rem;
         padding: 10px 20px;
         letter-spacing: 1px;
         cursor: pointer;
@@ -105,6 +162,11 @@
         border: 1px solid lightgray;
         outline: 1px solid lightgray;
         transition: 0.25s;
+
+        @include sm {
+          padding: 10px;
+          font-size: 1rem;
+        }
 
         &::placeholder {
           opacity: 0.5;
@@ -117,5 +179,14 @@
         }
       }
     }
+  }
+}
+
+.hidden {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @include md {
+    display: none;
   }
 }

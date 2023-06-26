@@ -52,7 +52,6 @@ const SearchUserModal = ({ close, setAllChats, allChats }) => {
         (chat) => chat._id === res?.data?.data._id
       );
       if (!searchedChat[0]) {
-        console.log("INSIDE");
         setAllChats((prev) => [res?.data?.data, ...prev]);
         setSelectedChat(res?.data?.data);
       } else {
@@ -65,7 +64,6 @@ const SearchUserModal = ({ close, setAllChats, allChats }) => {
       setLoading(false);
       close();
     } catch (err) {
-      console.log(err);
       setLoading(false);
       toast.error(err.response?.data?.message || "Something went wrong!");
     }

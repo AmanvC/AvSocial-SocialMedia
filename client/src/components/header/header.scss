@@ -44,7 +44,7 @@
       justify-content: center;
       align-items: center;
       position: relative;
-      z-index: 1000;
+      z-index: 100;
 
       @include sm {
         top: 120%;
@@ -186,6 +186,16 @@
       .friend-request-small-screen {
         .friends-container {
           position: relative;
+        }
+      }
+
+      .messages-small-screen {
+        font-size: 1.5em;
+        margin-right: 10px;
+
+        @include sm {
+          font-size: 2em;
+          margin: 0;
         }
       }
 

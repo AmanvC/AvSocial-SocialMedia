@@ -1,3 +1,5 @@
+@import "../../mixins.scss";
+
 .searched-user-card {
   width: 100%;
   padding: 10px;
@@ -24,6 +26,11 @@
         height: 50px;
         width: 50px;
         border-radius: 50%;
+
+        @include sm {
+          height: 40px;
+          width: 40px;
+        }
       }
     }
   }
@@ -31,7 +38,20 @@
   .user-details {
     .name {
       font-weight: 600;
-      font-size: 1.2em;
+      font-size: 1.2rem;
+
+      @include sm {
+        font-size: 1rem;
+      }
+    }
+
+    small {
+      font-size: 1rem;
+      opacity: 0.5;
+
+      @include sm {
+        font-size: 0.8rem;
+      }
     }
   }
 }

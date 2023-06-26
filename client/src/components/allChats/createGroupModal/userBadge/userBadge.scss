@@ -1,3 +1,5 @@
+@import "../../../../mixins.scss";
+
 .user-badge {
   padding: 5px 10px;
   border-radius: 10px;
@@ -6,4 +8,10 @@
   display: flex;
   gap: 5px;
   align-items: center;
+
+  @include sm {
+    // padding: 2px 5px;
+    font-size: 0.9rem;
+    gap: 3px;
+  }
 }

@@ -1,16 +1,36 @@
+@import "../../mixins.scss";
+
 .all-chats {
   display: flex;
   flex-direction: column;
+  width: 35%;
+
+  @include md {
+    flex: 1;
+  }
+
+  @include sm {
+    margin: 10px;
+  }
+
   .heading {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid lightgray;
+    width: 100%;
 
     h2 {
-      font-size: 1.5em;
       font-weight: 400;
+
+      @include sm {
+        font-size: 1.5rem !important;
+      }
+
+      @include md {
+        font-size: 2rem;
+      }
     }
 
     .options {
@@ -25,12 +45,17 @@
         display: flex;
         gap: 5px;
         justify-content: center;
-        font-size: 1.5em;
+        font-size: 1.5rem;
         transition: 0.25s;
 
         &:hover {
           background-color: var(--theme-color);
           color: white;
+        }
+
+        @include sm {
+          padding: 6px;
+          font-size: 1.3rem;
         }
       }
 
@@ -77,5 +102,12 @@
     border-radius: 10px;
     padding: 10px;
     overflow-y: scroll;
+  }
+}
+
+.hidden {
+  @include md {
+    display: none;
+    width: 100%;
   }
 }

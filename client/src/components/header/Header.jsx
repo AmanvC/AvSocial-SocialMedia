@@ -11,6 +11,7 @@ import { TbSettings } from "react-icons/tb";
 import { MdPersonSearch, MdLogout } from "react-icons/md";
 import { FaUserFriends } from "react-icons/fa";
 import { BiLinkExternal } from "react-icons/bi";
+import { BsChatDotsFill } from "react-icons/bs";
 import { RiContactsBook2Fill } from "react-icons/ri";
 import { makeRequest } from "../../axios";
 import PendingRequests from "../pendingRequests/PendingRequests";
@@ -145,6 +146,11 @@ const Header = () => {
           >
             <MdPersonSearch />
           </p>
+          <div className="messages-small-screen">
+            <Link to="/chats">
+              <BsChatDotsFill />
+            </Link>
+          </div>
           <div className="friend-request-small-screen">
             <FaUserFriends onClick={() => setShowFriendRequests(true)} />
             {showFriendRequests && (
