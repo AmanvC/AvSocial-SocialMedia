@@ -49,18 +49,19 @@ module.exports.getPosts = async (req, res) => {
       nextPage = true;
     }
 
+    let signedUrlDone = [];
+
     for (const post of allPosts) {
       if (post.image) {
         const url = await getUrl(post.image);
         post.image = url;
       }
-      if (post.user.profileImage) {
-        const url = await getUrl(post.user.profileImage);
-        post.user.profileImage = url;
-      }
-      if (post.user.coverImage) {
-        const url = await getUrl(post.user.coverImage);
-        post.user.coverImage = url;
+      if (signedUrlDone.indexOf(post.user.id) === -1) {
+        if (post.user.profileImage) {
+          const url = await getUrl(post.user.profileImage);
+          post.user.profileImage = url;
+          signedUrlDone.push(post.user.id);
+        }
       }
     }
 
