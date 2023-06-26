@@ -36,11 +36,6 @@ export const AuthContextProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  // useEffect(() => {
-  //   socket = io(ENDPOINT);
-  //   socket.emit("setup", currentUser);
-  // }, []);
-
   const login = async (email, password) => {
     try {
       const res = await makeRequest().post("/users/create-session", {
@@ -64,6 +59,7 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   const logout = () => {
+    socket.emit("logout", currentUser);
     setCurrentUser(null);
     removeItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
   };
@@ -75,7 +71,14 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ currentUser, login, logout, updateCurrentUser, loading, socket }}
+      value={{
+        currentUser,
+        login,
+        logout,
+        updateCurrentUser,
+        loading,
+        socket,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -1,0 +1,73 @@
+.online-friends {
+  min-height: 50%;
+  text-align: center;
+  color: lightgray;
+  border-radius: 5px;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  justify-content: center;
+  user-select: none;
+
+  h3 {
+    color: var(--theme-color);
+    text-align: center;
+  }
+
+  .online {
+    flex: 1;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    border: 1px dashed lightgray;
+    padding: 10px;
+    border-radius: 5px;
+    color: black;
+
+    .friend-card {
+      display: flex;
+      gap: 10px;
+      padding: 5px;
+      align-items: center;
+      font-weight: 600;
+      border-radius: 5px;
+      transition: 0.25s;
+
+      &:hover {
+        background-color: lightgray;
+      }
+
+      .image {
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        .online-icon {
+          position: absolute;
+          height: 10px;
+          width: 10px;
+          border-radius: 50%;
+          background-color: #05b113;
+          z-index: 2;
+          top: 3px;
+          right: 2px;
+          box-shadow: 0px 0px 5px #05b113;
+        }
+
+        .lazy-load-image-background {
+          margin-top: 4px;
+          img {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+          }
+        }
+      }
+
+      p {
+        position: relative;
+        bottom: 1px;
+      }
+    }
+  }
+}

@@ -9,28 +9,11 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 10px;
   overflow: hidden;
   border: 1px solid var(--theme-color);
 
   @include smd {
     display: none;
-  }
-
-  .divider {
-    width: 100%;
-    border-top: 1px dashed lightgray;
-  }
-
-  .message-container {
-    min-height: 48%;
-    text-align: center;
-    color: lightgray;
-    border: 1px dashed lightgray;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    // background-color: blue;
   }
 }
