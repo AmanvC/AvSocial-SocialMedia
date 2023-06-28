@@ -1,7 +1,8 @@
 import { useContext, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
-// import toast from "react-hot-toast";
+import { RxEyeOpen } from "react-icons/rx";
+import { RiEyeCloseLine } from "react-icons/ri";
 import "./login.scss";
 
 const Login = () => {
@@ -11,6 +12,7 @@ const Login = () => {
   });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { currentUser, login } = useContext(AuthContext);
 
   const submitForm = async (e) => {
@@ -30,6 +32,13 @@ const Login = () => {
     setInputs({
       ...inputs,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleTestAccountClick = () => {
+    setInputs({
+      email: process.env.REACT_APP_TEST_EMAIL,
+      password: process.env.REACT_APP_TEST_PASSWORD,
     });
   };
 
@@ -63,8 +72,13 @@ const Login = () => {
                 <span>Continue with Facebook</span>
               </div>
             </Link>
-            <div className="local-signup">
-              <Link to="/register">Register with email</Link>
+            <div className="other-options">
+              <div className="local-signup">
+                <Link to="/register">Register with email</Link>
+              </div>
+              <button className="test-account" onClick={handleTestAccountClick}>
+                Test Account
+              </button>
             </div>
           </div>
           <div className="line"> </div>
@@ -91,14 +105,22 @@ const Login = () => {
               </div>
               <div className="input">
                 <p>Password</p>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Your password"
-                  required
-                  onChange={changeInputValues}
-                  value={inputs.password}
-                />
+                <div className="password-input">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Your password"
+                    required
+                    onChange={changeInputValues}
+                    value={inputs.password}
+                  />
+                  <span
+                    className="icon"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <RiEyeCloseLine /> : <RxEyeOpen />}
+                  </span>
+                </div>
               </div>
               <div id="actions">
                 <Link to="/reset-password">Forgot password?</Link>

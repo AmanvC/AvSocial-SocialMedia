@@ -116,7 +116,9 @@
           border: 1px solid lightgray;
           padding: 10px;
           margin: 10px 0;
+          border-radius: 5px;
           cursor: pointer;
+          transition: 0.25s ease;
 
           i {
             color: rgb(80, 80, 243);
@@ -127,23 +129,41 @@
           }
         }
 
-        .local-signup {
+        .other-options {
           display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 5px;
-          border-radius: 10px;
+          justify-content: space-between;
+          margin-top: 10px;
 
-          a {
-            margin: 0;
-            font-size: 14px;
-            cursor: pointer;
+          .local-signup {
+            border-radius: 5px;
+            padding: 2px 5px;
+            display: flex;
+            align-items: center;
             color: rgb(143, 143, 143);
-            text-decoration: none;
+            transition: 0.25s ease;
+
+            a {
+              // margin: 0;
+              font-size: 14px;
+              text-decoration: none;
+            }
+
+            &:hover {
+              background-color: rgb(238, 238, 238);
+            }
           }
 
-          &:hover {
-            background-color: rgb(238, 238, 238);
+          .test-account {
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: var(--theme-color);
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+
+            &:active {
+              transform: scale(0.99);
+            }
           }
         }
       }
@@ -178,6 +198,24 @@
 
           @include sm {
             font-size: 24px;
+          }
+        }
+
+        .password-input {
+          position: relative;
+
+          .icon {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            height: 90%;
+            width: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: gray;
+            cursor: pointer;
+            background-color: white;
           }
         }
 
@@ -236,7 +274,7 @@
             cursor: pointer;
 
             &:active {
-              transform: scale(0.95);
+              transform: scale(0.98);
             }
           }
 
