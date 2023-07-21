@@ -44,7 +44,7 @@ module.exports.getUrl = async (Key) => {
     Key,
   };
   const command = new GetObjectCommand(getObjectParams);
-  const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+  const url = await getSignedUrl(s3, command);
   return url;
 };
 
